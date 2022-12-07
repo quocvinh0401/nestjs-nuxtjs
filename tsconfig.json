@@ -1,0 +1,16 @@
+{
+  "extends": "./.frontend/tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "experimentalDecorators": true,
+    "target": "ES2020",
+    "paths": {
+      "@/*": [
+        "backend/*"
+      ],
+      "~/*": [
+        "frontend/*"
+      ]
+    }
+  },
+}
