@@ -5,6 +5,6 @@ export namespace Configuration {
   }
 
   export interface Configure {
-    database: Configuration.Configure
+    database: Configuration.Database
   }
 }

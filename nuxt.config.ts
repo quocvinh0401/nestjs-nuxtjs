@@ -8,7 +8,12 @@ const config = {
     }
   },
   css: ['~/assets/css/tailwind.css'],
-  modules: ['@nuxtjs/tailwindcss']
+  modules: ['@nuxtjs/tailwindcss'],
+  app: {
+    head: {
+      title: 'nest-nuxt'
+    }
+  }
 };
 
 export default config
