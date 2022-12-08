@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply h-screen w-full;
-    @apply flex items-center justify-center;
+  @apply h-screen w-full;
+  @apply bg-gray-default;
 }
+

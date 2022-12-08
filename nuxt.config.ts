@@ -11,7 +11,7 @@ const config = {
   modules: ['@nuxtjs/tailwindcss'],
   app: {
     head: {
-      title: 'nest-nuxt'
+      title: 'Social Media'
     }
   }
 };

@@ -4,6 +4,7 @@
 
 .backend
 .frontend
+.env
 
 # Logs
 logs
