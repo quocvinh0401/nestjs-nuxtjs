@@ -2,8 +2,14 @@
     <div class="w-full">
         <template v-if="access">
             <header-default></header-default>
-            <div class="flex justify-center">
+            <div class="flex justify-between">
+                <!-- left side -->
+                <navigation-default></navigation-default>
+                <!-- middle -->
                 <slot />
+
+                <!-- right side -->
+                <contact-friend/>
             </div>
         </template>
 

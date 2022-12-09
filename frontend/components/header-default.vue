@@ -13,20 +13,27 @@
 
         <!-- center -->
         <div class="flex space-x-2 my-1">
-            <div v-for="(tab, index) in tabs" class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg" :class="((tabActived == index) && 'hover:bg-white')" @click="tabActived = index">
+            <div v-for="(tab, index) in tabs" class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative" :class="((tabActived == index) && 'hover:bg-white')" @click="tabActived = index">
                 <icon :name="(tabActived == index) ? tab.iconActived : tab.icon" size="28" :class="tabActived == index ? 'text-blue-500' : 'text-gray-500'"/>
+                <div class="absolute h-1 w-full left-0 -bottom-1 rounded" :class="tabActived == index && 'bg-blue-500'"></div>
             </div>
         </div>
 
         <!-- right -->
-        <div>
-
+        <div class="flex space-x-2">
+            <div v-for="(m, i) in menusRight" 
+                class="bg-gray-200 hover:bg-gray-300 p-2 rounded-full cursor-pointer"
+                :class="menuActived == i && 'bg-blue-200'"
+                @click="menuActived = i">
+                <icon :name="m.icon" size="24" :class="menuActived == i ? 'text-blue-500' : 'text-black'"/>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 const tabActived = ref<number>(0)
+const menuActived = ref<number>()
 
 const tabs = ref([
     {
@@ -48,6 +55,25 @@ const tabs = ref([
         title: 'gaming',
         icon: 'teenyicons:game-controller-outline',
         iconActived: 'teenyicons:game-controller-solid',
+    },
+])
+
+const menusRight = ref([
+    {
+        title: 'menu',
+        icon: 'mingcute:dot-grid-fill'
+    },
+    {
+        title: 'messenger',
+        icon: 'mdi:facebook-messenger'
+    },
+    {
+        title: 'notifications',
+        icon: 'zondicons:notifications'
+    },
+    {
+        title: 'account',
+        icon: 'material-symbols:arrow-drop-down'
     },
 ])
 </script>
