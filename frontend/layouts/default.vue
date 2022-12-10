@@ -2,11 +2,13 @@
     <div class="w-full">
         <template v-if="access">
             <header-default></header-default>
-            <div class="flex justify-between">
+            <div class="flex justify-between space-x-2 relative pr-1">
                 <!-- left side -->
                 <navigation-default></navigation-default>
                 <!-- middle -->
-                <slot />
+                <div class="flex-1 flex justify-center">
+                    <slot />
+                </div>
 
                 <!-- right side -->
                 <contact-friend/>
