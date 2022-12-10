@@ -48,7 +48,7 @@
 
         <!-- comment -->
         <div class="grid gap-4">
-            <div class="flex space-x-1">
+            <div class="flex space-x-3">
                 <avatar/>
                 <input type="text" class="flex-1 py-2 px-3 bg-gray-default rounded-full outline-none" placeholder="Write a comment...">
             </div>

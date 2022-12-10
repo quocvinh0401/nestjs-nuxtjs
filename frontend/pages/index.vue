@@ -14,15 +14,15 @@
 
             <!-- bottom -->
             <div class="grid grid-cols-3">
-                <div class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
+                <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
                     <icon name="heroicons:video-camera-solid" size="20" class="text-red-500" />
                     <p class="text-gray-400 font-semibold">Live video</p>
                 </div>
-                <div class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
+                <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
                     <icon name="material-symbols:photo" size="20" class="text-green-500" />
                     <p class="text-gray-400 font-semibold">Photo/video</p>
                 </div>
-                <div class="flex items-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
+                <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
                     <icon name="bi:emoji-smile" size="20" class="text-yellow-500" />
                     <p class="text-gray-400 font-semibold">Feeling/activity</p>
                 </div>

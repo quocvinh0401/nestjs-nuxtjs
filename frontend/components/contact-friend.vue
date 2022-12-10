@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-[22.5rem] min-w-[17.5rem] flex-1 basis-[22.5rem] hidden md:block sticky top-[69px] h-[calc(100vh-69px)] overflow-hidden hover:overflow-y-auto">
+    <div class="max-w-[22.5rem] min-w-[17.5rem] flex-1 basis-[22.5rem] hidden md:block sticky top-[69px] h-[calc(100vh-69px)] overflow-hidden overflow-y-auto">
         <div class="flex justify-between items-center mt-2 mr-4">
             <h3 class="font-semibold">Contacts</h3>
             <div class="flex space-x-1">

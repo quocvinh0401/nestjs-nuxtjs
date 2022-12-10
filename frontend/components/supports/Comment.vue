@@ -1,5 +1,5 @@
 <template>
-    <div class="flex space-x-2 comment">
+    <div class="flex space-x-3 comment">
         <avatar image="https://cdnimg.vietnamplus.vn/t460/Uploaded/mzdiq/2016_08_07/conan2.PNG"></avatar>
         <div>
             <div class="flex items-center space-x-2">
