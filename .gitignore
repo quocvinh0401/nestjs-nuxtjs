@@ -5,6 +5,7 @@
 .backend
 .frontend
 .env
+frontend/shared
 
 # Logs
 logs
