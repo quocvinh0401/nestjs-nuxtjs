@@ -68,10 +68,6 @@
 
 <script setup lang="ts">
 import { Post } from '~/shared/post.interface'
-const post = {
-    title: 'title',
-    content: 'content',
-}
 
 const _post = usePost<any>('post')
 
@@ -88,7 +84,6 @@ const handleShare = () => {
 
 const handleSubmit = async () => {
     console.log('submit')
-    await _post(post)
     cmt.value = ''
 }
 

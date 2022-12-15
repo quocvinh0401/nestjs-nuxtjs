@@ -16,9 +16,10 @@ export const useApi = (
   const { apiBaseUrl } = $config;
   const requestInit: RequestInit = {
     method,
-    mode: 'no-cors',
+    mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       source: route.fullPath,
     },
   };
@@ -77,21 +78,22 @@ export const useApi = (
     }
     console.log({requestInit})
     // if (options.loading) setLoading(true)
-    const res = await fetch(input, requestInit);
+    return await fetch(input, requestInit).then(res => res.json());
+    // const res = await fetch(input, requestInit);
     // setLoading(false)
-    let json: any = null;
-    try {
-      json = await res.json();
-    } catch (err) {
-      console.log('==================================>>>>', err);
-    }
+    // let json: any = null;
+    // try {
+    //   json = await res.json();
+    // } catch (err) {
+    //   console.log('==================================>>>>', err);
+    // }
     // if (options.alert?.is) {
     //   const title = typeof options.alert.title == 'string' ? options.alert.title : options.alert.title?.[method]
     //   if (res.ok) addToast({ title, message: `${title} 되었습니다`, type: 'success' })
     //   else addToast({ title: `${title}오류`, message: json['message'], type: 'error' })
     // }
-    if (res.ok && json) return json;
-    else if (!res.ok) throw json;
+    // if (res.ok && json) return json;
+    // else if (!res.ok) throw json;
   };
 };
 
@@ -104,6 +106,6 @@ export const usePost = <T>(..._paths: (string | ApiOptions)[]) => {
   });
   const api = useApi('POST', options, ...paths);
 
-  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | {}> =>
+  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
     await api(...pathsAndParms);
 };
