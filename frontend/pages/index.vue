@@ -73,6 +73,8 @@
 <script setup lang="ts">
 const displayModal = ref<boolean>(false)
 
+const {data: posts, refresh} = useFetchWithCredentials('posts')
+
 const options = [
     {
         title: 'Public',

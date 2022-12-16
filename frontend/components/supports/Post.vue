@@ -67,6 +67,7 @@
 </template>
 
 <script setup lang="ts">
+import { Builder } from 'builder-pattern';
 import { Post } from '~/shared/post.interface'
 
 const _post = usePost<any>('post')
@@ -83,7 +84,8 @@ const handleShare = () => {
 }
 
 const handleSubmit = async () => {
-    console.log('submit')
+    const post = Builder<Post>()
+    await _post({content: cmt.value})
     cmt.value = ''
 }
 

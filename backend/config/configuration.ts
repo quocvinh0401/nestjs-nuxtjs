@@ -7,3 +7,4 @@ export default () =>
             mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017',
             mongoDbs: process.env.MONGO_DBS || 'local'
         })
+        .build()

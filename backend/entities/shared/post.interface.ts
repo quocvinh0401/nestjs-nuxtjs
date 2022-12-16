@@ -1,11 +1,11 @@
 import { User } from "./user.interface";
 
 export interface Post {
-    user: User,
+    // user: User,
     title: string,
-    content: Content,
-    interact: Interact,
-    comments: Comment[]
+    // content: Content,
+    // interact: Interact,
+    // comments: Comment[]
 }
 
 export interface Content {

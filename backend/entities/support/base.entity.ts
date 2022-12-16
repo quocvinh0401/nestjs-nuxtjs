@@ -1,6 +1,10 @@
-import { Property } from "@mikro-orm/core";
+import { Property, PrimaryKey } from "@mikro-orm/core";
+import {Long} from 'bson'
 
 export class BaseEntity {
+    @PrimaryKey({type: Long, fieldName: '_id'})
+    id!: Long
+
     @Property({ onCreate: () => new Date() })
     createdAt!: Date
 
