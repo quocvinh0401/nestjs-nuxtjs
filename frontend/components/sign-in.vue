@@ -8,26 +8,189 @@
             </div>
             <!-- right side -->
             <div class="flex flex-col space-y-4 items-center border rounded-xl p-4 bg-white shadow-md">
-                <input type="text" placeholder="Email address or phone number" v-model="user.username" >
+                <input type="text" placeholder="Email address or phone number" v-model="user.username">
                 <input type="password" placeholder="Password" v-model="user.password">
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="login">Log in</button>
                 <span class="text-blue-500 cursor-pointer hover:underline">Forgotten password?</span>
-                <button class="bg-green-500 hover:bg-green-600">Create New Account</button>
+                <button class="bg-green-500 hover:bg-green-600" @click="_modal.isOpen = true">Create New
+                    Account</button>
             </div>
         </div>
+        <modal v-if="_modal.isOpen" @close="_modal.isOpen = false" :title="_modal.title">
+            <form-kit type="form" :actions="false" v-model="data">
+                <form-kit-schema :schema="schema" :data="data"></form-kit-schema>
+            </form-kit>
+            <div class="flex justify-center !p-1">
+                <button class=" bg-red-500" @click="login">Register</button>
+            </div>
+        </modal>
     </div>
 </template>
 
 <script setup lang="ts">
-import { User } from '~/shared/account.interface';
+import { Builder } from 'builder-pattern';
+import { Modal as iModal } from '~/shared/interface';
 
-const user = ref<User>({
+const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
+
+interface Payload {
+    username: string,
+    password: string
+}
+
+const user = ref<Payload>({
     username: '',
     password: ''
 })
 
+const days = computed(() => {
+    const _ = <object[]>[]
+    let i = 1
+    while (i <= 31) {
+        _.push({ label: i, value: i })
+        i++
+    }
+    return _
+})
+
+const months = computed(() => {
+    const _ = <object[]>[]
+    let i = 1
+    while (i <= 12) {
+        _.push({ label: i, value: i })
+        i++
+    }
+    return _
+})
+
+const years = computed(() => {
+    const _ = <object[]>[]
+    let year = new Date().getFullYear()
+    for (let i = 0; i <= 50; i++) {
+        _.push({ label: year - i, value: year - i })
+    }
+    return _
+})
+
+const data = ref<any>(Builder<any>()
+    .firstName('')
+    .lastName('')
+    .username('')
+    .password('')
+    .dayOfBirth({
+        day: undefined,
+        month: undefined,
+        year: undefined
+    })
+    .gender(undefined)
+    .days(days.value)
+    .months(months.value)
+    .years(years.value)
+    .build())
+
+const schema = ref<any>([
+    {
+        $el: 'div',
+        attrs: {
+            class: 'grid grid-cols-2 gap-2'
+        },
+        children: [
+            {
+                $formkit: 'text',
+                name: 'firstName',
+                outerClass: '',
+                placeholder: 'First Name'
+            },
+            {
+                $formkit: 'text',
+                name: 'lastName',
+                outerClass: '',
+                placeholder: 'Last Name'
+            },
+        ]
+    },
+    {
+        $formkit: 'text',
+        outerClass: 'w-full',
+        placeholder: 'Phone Number or Email',
+        name: 'username'
+    },
+    {
+        $formkit: 'group',
+        children: [
+            {
+                $formkit: 'password',
+                placeholder: 'Password',
+                name: "password",
+                validation: "required",
+            },
+            {
+                $formkit: 'password',
+                placeholder: 'Confirm Password',
+                name: "password_confirm",
+                validation: "required|confirm",
+            }
+        ]
+    },
+    {
+        $el: 'div',
+        children: [
+            {
+                $el: 'div',
+                children: 'Day of birth',
+                name: 'dateOfBirth'
+            },
+            {
+                $el: 'div',
+                attrs: {
+                    class: 'grid grid-cols-3 gap-3'
+                },
+                label: '',
+                children: [
+                    {
+                        $formkit: 'select',
+                        outerClass: 'w-full',
+                        name: 'day',
+                        options: '$days'
+                    },
+                    {
+                        $formkit: 'select',
+                        outerClass: 'w-full',
+                        name: 'month',
+                        options: '$months'
+                    },
+                    {
+                        $formkit: 'select',
+                        outerClass: 'w-full',
+                        name: 'year',
+                        options: '$years'
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        $el: 'div',
+        children: [
+            {
+                $el: 'div',
+                children: 'Gender'
+            },
+            {
+                $formkit: 'radio',
+                vModel: '$gender',
+                value: '$gender',
+                options: [
+                    { label: 'Male', value: 'male' },
+                    { label: 'Female', value: 'female' }
+                ]
+            }
+        ]
+    }
+])
+
 const login = () => {
-    localStorage.setItem('user', JSON.stringify(user.value))
+    console.log(data.value)
 }
 </script>
 

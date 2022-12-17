@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "dev:front": "nuxt dev --port 3080",
+    "dev:front": "nuxt dev --port 3000",
     "dev:back": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",

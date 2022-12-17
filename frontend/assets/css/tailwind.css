@@ -25,3 +25,29 @@ body {
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-300 rounded-lg
 }
+
+/* custom scrollbar */
+
+
+/* custom formkit */
+.formkit-outer {
+  @apply h-16;
+}
+
+.formkit-inner > *:not([type=radio]) {
+  @apply w-full;
+  @apply border rounded-lg p-2 outline-none;
+}
+
+.formkit-options {
+  @apply grid grid-cols-2 gap-5
+}
+.formkit-option > .formkit-wrapper {
+  @apply flex justify-between;
+  @apply border rounded-lg py-2 px-4;
+}
+
+.formkit-decorator {
+  @apply hidden
+}
+/* custom formkit */

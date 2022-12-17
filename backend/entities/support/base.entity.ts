@@ -17,3 +17,17 @@ export class BaseEntity {
     @Property()
     updatedBy!: string;
 }
+
+export class BaseUserEntity {
+    @Property({ onCreate: () => new Date() })
+    createdAt!: Date
+
+    @Property({ onUpdate: () => new Date()})
+    updatedAt!: Date
+
+    @Property()
+    createdBy!: string
+    
+    @Property()
+    updatedBy!: string;
+}
