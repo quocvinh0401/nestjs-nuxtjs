@@ -21,3 +21,9 @@ export interface Modal {
   title: string,
   data: any
 }
+
+export interface DateOfBirth {
+  day: number,
+  month: number,
+  year: number
+}

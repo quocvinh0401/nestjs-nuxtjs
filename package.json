@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "dev:front": "nuxt dev --port 3000",
+    "dev:front": "copyfiles -f ./backend/entities/shared/*.ts ./frontend/shared && nuxt dev --port 3000",
     "dev:back": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -22,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@formkit/nuxt": "^1.0.0-beta.12",
     "@iconify/vue": "^4.0.1",
     "@mikro-orm/core": "^5.6.0",
     "@mikro-orm/mongodb": "^5.6.0",

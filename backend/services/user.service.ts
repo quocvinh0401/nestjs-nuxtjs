@@ -1,3 +1,4 @@
+import { UserDTO } from "@/dto/user.dto";
 import { User } from "@/entities/user.entity";
 import { EntityManager, MongoEntityRepository } from "@mikro-orm/mongodb";
 import { InjectRepository } from "@mikro-orm/nestjs";
@@ -13,4 +14,8 @@ export class UserService extends Service<User> {
     ){
         super( repository, em)
     }
+
+    // async create(dto: Partial<UserDTO>){
+        
+    // }
 }

@@ -1,10 +1,20 @@
 import { UserStatus } from './enum';
+import { DateOfBirth } from './interface';
 
-export interface User {
-  avatar: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  friends: User[];
-  status: UserStatus;
+interface Infomation {
+  login: string,
+  password: string,
+  avatar: string,
+  firstName: string,
+  lastName: string,
+  dateOfBirth: DateOfBirth,
+  friends: User[],
+  status: UserStatus
+}
+
+export interface User extends Infomation {
+  createdAt: Date,
+  updatedAt: Date,
+  createdBy: string,
+  updatedBy: string
 }

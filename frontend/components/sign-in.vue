@@ -16,12 +16,12 @@
                     Account</button>
             </div>
         </div>
-        <modal v-if="_modal.isOpen" @close="_modal.isOpen = false" :title="_modal.title">
+        <modal v-if="_modal.isOpen" @close="closeModal" :title="_modal.title">
             <form-kit type="form" :actions="false" v-model="data">
                 <form-kit-schema :schema="schema" :data="data"></form-kit-schema>
             </form-kit>
             <div class="flex justify-center !p-1">
-                <button class=" bg-red-500" @click="login">Register</button>
+                <button class=" bg-red-500" @click="register">Register</button>
             </div>
         </modal>
     </div>
@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
+import {getDaysMonthsYears} from '~/libraries/utilities'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
@@ -43,49 +44,21 @@ const user = ref<Payload>({
     password: ''
 })
 
-const days = computed(() => {
-    const _ = <object[]>[]
-    let i = 1
-    while (i <= 31) {
-        _.push({ label: i, value: i })
-        i++
-    }
-    return _
-})
+const days = getDaysMonthsYears('days')
 
-const months = computed(() => {
-    const _ = <object[]>[]
-    let i = 1
-    while (i <= 12) {
-        _.push({ label: i, value: i })
-        i++
-    }
-    return _
-})
+const months = getDaysMonthsYears('months')
 
-const years = computed(() => {
-    const _ = <object[]>[]
-    let year = new Date().getFullYear()
-    for (let i = 0; i <= 50; i++) {
-        _.push({ label: year - i, value: year - i })
-    }
-    return _
-})
+const years = getDaysMonthsYears('years')
 
 const data = ref<any>(Builder<any>()
     .firstName('')
     .lastName('')
     .username('')
     .password('')
-    .dayOfBirth({
-        day: undefined,
-        month: undefined,
-        year: undefined
-    })
     .gender(undefined)
-    .days(days.value)
-    .months(months.value)
-    .years(years.value)
+    .days(days)
+    .months(months)
+    .years(years)
     .build())
 
 const schema = ref<any>([
@@ -116,7 +89,7 @@ const schema = ref<any>([
         name: 'username'
     },
     {
-        $formkit: 'group',
+        $el: 'div',
         children: [
             {
                 $formkit: 'password',
@@ -138,7 +111,6 @@ const schema = ref<any>([
             {
                 $el: 'div',
                 children: 'Day of birth',
-                name: 'dateOfBirth'
             },
             {
                 $el: 'div',
@@ -152,7 +124,7 @@ const schema = ref<any>([
                         outerClass: 'w-full',
                         name: 'day',
                         options: '$days'
-                    },
+                    },  
                     {
                         $formkit: 'select',
                         outerClass: 'w-full',
@@ -179,7 +151,7 @@ const schema = ref<any>([
             {
                 $formkit: 'radio',
                 vModel: '$gender',
-                value: '$gender',
+                name: 'gender',
                 options: [
                     { label: 'Male', value: 'male' },
                     { label: 'Female', value: 'female' }
@@ -189,9 +161,20 @@ const schema = ref<any>([
     }
 ])
 
+const closeModal = () => _modal.value.isOpen = false
+
+const _post = usePost('user')
+
+const register = async () => {
+    await _post(data)
+    closeModal()
+}
+
 const login = () => {
     console.log(data.value)
 }
+
+
 </script>
 
 <style scoped>
@@ -202,7 +185,7 @@ input {
 }
 
 button {
-    @apply p-3 rounded-xl;
+    @apply px-3 py-2 rounded-xl;
     @apply text-white font-semibold text-xl
 }
 </style>
