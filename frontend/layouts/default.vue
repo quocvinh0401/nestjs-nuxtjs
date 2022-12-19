@@ -23,13 +23,8 @@
 
 <script setup lang="ts">
 
-const access = ref<boolean>()
+const auth = useAuthentication()
 
-onBeforeMount(() => {
-    const _ = localStorage.getItem('user')
-    if (_ && _.length > 0) {
-        access.value = true
-    } else access.value = false
-})
-    
+const access = computed(()=> auth.value.authenticated)
+
 </script>

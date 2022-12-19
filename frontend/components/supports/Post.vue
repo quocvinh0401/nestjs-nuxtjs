@@ -71,12 +71,14 @@ import { Builder } from 'builder-pattern';
 import { Post } from '~/shared/post.interface'
 
 const _post = usePost<any>('post')
+const { principal } = usePrincipal()
 
 const props = defineProps<{post: Post}>()
 const cmt = ref<string>('')
 
 const handleLike = () => {
     console.log('like')
+    console.log(principal.value)
 }
 
 const handleShare = () => {

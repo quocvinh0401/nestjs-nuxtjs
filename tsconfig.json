@@ -4,6 +4,10 @@
     "module": "commonjs",
     "experimentalDecorators": true,
     "target": "ES2020",
+    "noImplicitAny": false,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "paths": {
       "@/*": [
         "backend/*"

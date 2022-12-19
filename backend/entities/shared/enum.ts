@@ -1,4 +1,9 @@
 export enum UserStatus {
-  OFFLINE = 0,
-  ONLINE = 1,
+  OFFLINE = 'offline',
+  ONLINE = 'online',
+}
+
+export enum UserGender {
+  MALE = 'male',
+  FEMALE = 'female'
 }

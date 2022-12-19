@@ -8,9 +8,9 @@
             </div>
             <!-- right side -->
             <div class="flex flex-col space-y-4 items-center border rounded-xl p-4 bg-white shadow-md">
-                <input type="text" placeholder="Email address or phone number" v-model="user.username">
-                <input type="password" placeholder="Password" v-model="user.password">
-                <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="login">Log in</button>
+                <input type="text" placeholder="Email address or phone number" v-model="payload.login">
+                <input type="password" placeholder="Password" v-model="payload.password">
+                <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="submit">Log in</button>
                 <span class="text-blue-500 cursor-pointer hover:underline">Forgotten password?</span>
                 <button class="bg-green-500 hover:bg-green-600" @click="_modal.isOpen = true">Create New
                     Account</button>
@@ -30,17 +30,21 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
-import {getDaysMonthsYears} from '~/libraries/utilities'
+import { getDaysMonthsYears } from '~/libraries/utilities'
+import { cloneDeep } from 'lodash'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
+const router = useRouter()
+const { login, principal, authenticationCookie } = usePrincipal()
+
 interface Payload {
-    username: string,
+    login: string,
     password: string
 }
 
-const user = ref<Payload>({
-    username: '',
+const payload = ref<Payload>({
+    login: '',
     password: ''
 })
 
@@ -53,7 +57,7 @@ const years = getDaysMonthsYears('years')
 const data = ref<any>(Builder<any>()
     .firstName('')
     .lastName('')
-    .username('')
+    .login('')
     .password('')
     .gender(undefined)
     .days(days)
@@ -86,7 +90,7 @@ const schema = ref<any>([
         $formkit: 'text',
         outerClass: 'w-full',
         placeholder: 'Phone Number or Email',
-        name: 'username'
+        name: 'login'
     },
     {
         $el: 'div',
@@ -124,7 +128,7 @@ const schema = ref<any>([
                         outerClass: 'w-full',
                         name: 'day',
                         options: '$days'
-                    },  
+                    },
                     {
                         $formkit: 'select',
                         outerClass: 'w-full',
@@ -163,17 +167,39 @@ const schema = ref<any>([
 
 const closeModal = () => _modal.value.isOpen = false
 
-const _post = usePost('user')
+const _postRegister = usePost('user/register')
 
 const register = async () => {
-    await _post(data)
-    closeModal()
+    const _ = cloneDeep(data.value)
+    const _data = ref<any>(Builder<any>()
+        .firstName(_.firstName)
+        .lastName(_.lastName)
+        .login(_.login)
+        .password(_.password)
+        .gender(_.gender)
+        .dateOfBirth({ day: data.value.day, month: data.value.month, year: data.value.year })
+        .build())
+
+    await _postRegister(_data.value).then(() => { closeModal() })
+
 }
 
-const login = () => {
-    console.log(data.value)
-}
+const exist = useGet('user', 'exist')
+const loginExist = (login: string) => exist({ key: 'login', value: login })
 
+const _postLogin = usePost<any>('user/login')
+
+const submit = async () => {
+    if (!payload.value.login || !payload.value.password) return
+    if (!await loginExist(payload.value.login)) return
+
+    const [jwt, user] = await _postLogin(payload.value)
+    if (!user) return
+    console.log('before:', authenticationCookie.value)
+    login({ jwt, principal: user })
+    console.log('after:', authenticationCookie.value)
+
+}
 
 </script>
 

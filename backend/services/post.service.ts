@@ -7,7 +7,7 @@ import { Builder } from "builder-pattern";
 import { Service } from "./support/service";
 
 @Injectable()
-export class PostService extends Service<any> {
+export class PostService extends Service<Post, PostDTO> {
 
     constructor(
         @InjectRepository(Post)

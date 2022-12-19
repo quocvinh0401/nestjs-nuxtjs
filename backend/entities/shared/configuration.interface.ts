@@ -4,7 +4,16 @@ export namespace Configuration {
     mongoDbs: string;
   }
 
+  export interface Security {
+    authentication: {
+      jwt: {
+        secret: string
+      }
+    }
+  }
+
   export interface Configure {
-    database: Configuration.Database
+    database: Configuration.Database,
+    security: Configuration.Security
   }
 }

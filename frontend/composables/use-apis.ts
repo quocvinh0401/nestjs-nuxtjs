@@ -76,25 +76,37 @@ export const useApi = (
         requestInit.body = JSON.stringify(body);
       }
     }
-    console.log({requestInit})
     // if (options.loading) setLoading(true)
-    return await fetch(input, requestInit).then(res => res.json());
-    // const res = await fetch(input, requestInit);
+    // return await fetch(input, requestInit).then(res => res.json());
+    const res = await fetch(input, requestInit);
     // setLoading(false)
-    // let json: any = null;
-    // try {
-    //   json = await res.json();
-    // } catch (err) {
-    //   console.log('==================================>>>>', err);
-    // }
+    let json: any = null;
+    try {
+      json = await res.json();
+    } catch (err) {
+      console.log('==================================>>>>', err);
+    }
     // if (options.alert?.is) {
     //   const title = typeof options.alert.title == 'string' ? options.alert.title : options.alert.title?.[method]
     //   if (res.ok) addToast({ title, message: `${title} 되었습니다`, type: 'success' })
     //   else addToast({ title: `${title}오류`, message: json['message'], type: 'error' })
     // }
-    // if (res.ok && json) return json;
-    // else if (!res.ok) throw json;
+    if (res.ok && json) return json;
+    else if (!res.ok) throw json;
   };
+};
+
+export const useGet = <T>(..._paths: (string | ApiOptions)[]) => {
+  const paths = [] as string[];
+  let options: ApiOptions = {};
+  _paths.forEach((d) => {
+    if (typeof d === 'string') paths.push(d);
+    else options = d;
+  });
+  const api = useApi('GET', options, ...paths);
+
+  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
+    await api(...pathsAndParms);
 };
 
 export const usePost = <T>(..._paths: (string | ApiOptions)[]) => {
