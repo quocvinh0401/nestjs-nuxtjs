@@ -4,7 +4,7 @@
             <h3 class="font-semibold">Contacts</h3>
             <div class="flex space-x-1">
                 <div v-for="m in menus" class="p-1 hover:bg-gray-200 rounded-full cursor-pointer">
-                    <icon :name="m.icon" size="20"/>
+                    <icon :name="m.icon" :size="20"/>
                 </div>
             </div>
         </div>

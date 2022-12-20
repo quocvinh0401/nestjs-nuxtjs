@@ -31,7 +31,7 @@ body {
 
 /* custom formkit */
 .formkit-outer {
-  @apply h-16;
+  @apply min-h-[4rem];
 }
 
 .formkit-inner > *:not([type=radio]) {
@@ -42,6 +42,7 @@ body {
 .formkit-options {
   @apply grid grid-cols-2 gap-5
 }
+
 .formkit-option > .formkit-wrapper {
   @apply flex justify-between;
   @apply border rounded-lg py-2 px-4;
@@ -49,5 +50,9 @@ body {
 
 .formkit-decorator {
   @apply hidden
+}
+
+.formkit-message {
+  @apply text-red-500 text-sm
 }
 /* custom formkit */

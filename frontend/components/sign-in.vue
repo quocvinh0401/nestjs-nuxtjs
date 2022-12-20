@@ -10,18 +10,20 @@
             <div class="flex flex-col space-y-4 items-center border rounded-xl p-4 bg-white shadow-md">
                 <input type="text" placeholder="Email address or phone number" v-model="payload.login">
                 <input type="password" placeholder="Password" v-model="payload.password">
-                <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="submit">Log in</button>
+                <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>
                 <span class="text-blue-500 cursor-pointer hover:underline">Forgotten password?</span>
                 <button class="bg-green-500 hover:bg-green-600" @click="_modal.isOpen = true">Create New
                     Account</button>
             </div>
         </div>
         <modal v-if="_modal.isOpen" @close="closeModal" :title="_modal.title">
-            <form-kit type="form" :actions="false" v-model="data">
-                <form-kit-schema :schema="schema" :data="data"></form-kit-schema>
-            </form-kit>
-            <div class="flex justify-center !p-1">
-                <button class=" bg-red-500" @click="register">Register</button>
+            <div class="w-[28rem]">
+                <form-kit ref="registerForm" type="form" :actions="false" v-model="data" @submit="handleSubmit">
+                    <form-kit-schema :schema="schema" :data="data"></form-kit-schema>
+                </form-kit>
+                <div class="flex justify-center !p-1">
+                    <button class=" bg-red-500" @click="submitAction">Register</button>
+                </div>
             </div>
         </modal>
     </div>
@@ -30,13 +32,13 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
-import { getDaysMonthsYears } from '~/libraries/utilities'
+import { getDaysMonthsYears , isValidDate } from '~/libraries/utilities'
 import { cloneDeep } from 'lodash'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
 const router = useRouter()
-const { login, principal, authenticationCookie } = usePrincipal()
+const { login, currentUser } = usePrincipal()
 
 interface Payload {
     login: string,
@@ -48,22 +50,24 @@ const payload = ref<Payload>({
     password: ''
 })
 
-const days = getDaysMonthsYears('days')
-
-const months = getDaysMonthsYears('months')
-
-const years = getDaysMonthsYears('years')
-
 const data = ref<any>(Builder<any>()
     .firstName('')
     .lastName('')
     .login('')
     .password('')
-    .gender(undefined)
-    .days(days)
-    .months(months)
-    .years(years)
+    .gender('male')
+    .isErrorDate(false)
+    .days(getDaysMonthsYears('days'))
+    .months(getDaysMonthsYears('months'))
+    .years(getDaysMonthsYears('years'))
+    .day(1)
+    .month(1)
+    .year(new Date().getFullYear())
     .build())
+
+watch(()=> [data.value.day, data.value.month, data.value.year], ([d, m, y])=> {
+    data.value.isErrorDate = isValidDate(d, m, y) ? false : true
+})
 
 const schema = ref<any>([
     {
@@ -76,21 +80,33 @@ const schema = ref<any>([
                 $formkit: 'text',
                 name: 'firstName',
                 outerClass: '',
-                placeholder: 'First Name'
+                placeholder: 'First name',
+                validation: 'required|alpha',
+                validationMessages: {
+                    'required': 'First name is required',
+                    'alpha': 'First name can only contain alphabetical characters.'
+                }
             },
             {
                 $formkit: 'text',
                 name: 'lastName',
                 outerClass: '',
-                placeholder: 'Last Name'
+                placeholder: 'Last name',
+                validation: 'required|alpha',
+                validationMessages: {
+                    'required': 'Last name is required',
+                    'alpha': 'Last name can only contain alphabetical characters.'
+                }
             },
         ]
     },
     {
         $formkit: 'text',
         outerClass: 'w-full',
-        placeholder: 'Phone Number or Email',
-        name: 'login'
+        placeholder: 'Phone number or Email',
+        name: 'login',
+        validation: 'required|length:6,32',
+
     },
     {
         $el: 'div',
@@ -99,22 +115,32 @@ const schema = ref<any>([
                 $formkit: 'password',
                 placeholder: 'Password',
                 name: "password",
-                validation: "required",
+                validation: "required|length:4,32",
             },
             {
                 $formkit: 'password',
-                placeholder: 'Confirm Password',
+                placeholder: 'Confirm password',
                 name: "password_confirm",
                 validation: "required|confirm",
+                validationMessages: {
+                    'required': 'Confirm password is required',
+                    'confirm': 'The password confirmation does not match'
+                }
             }
         ]
     },
     {
         $el: 'div',
+        attrs: {
+            class: 'relative'
+        },
         children: [
             {
                 $el: 'div',
-                children: 'Day of birth',
+                attrs: {
+                    class: 'text-sm font-semibold'
+                },
+                children: 'Date of birth',
             },
             {
                 $el: 'div',
@@ -142,6 +168,14 @@ const schema = ref<any>([
                         options: '$years'
                     }
                 ]
+            },
+            {
+                $el: 'div',
+                attrs: {
+                    class: 'absolute bottom-0 text-sm text-red-500'
+                },
+                if: '$isErrorDate',
+                children: 'Invalid date'
             }
         ]
     },
@@ -150,6 +184,9 @@ const schema = ref<any>([
         children: [
             {
                 $el: 'div',
+                attrs: {
+                    class: 'text-sm font-semibold'
+                },
                 children: 'Gender'
             },
             {
@@ -169,7 +206,14 @@ const closeModal = () => _modal.value.isOpen = false
 
 const _postRegister = usePost('user/register')
 
-const register = async () => {
+const registerForm = ref<any>()
+
+const submitAction = () => registerForm.value.node.submit()
+
+
+const handleSubmit = async () => {
+    if (data.value.isErrorDate) return
+
     const _ = cloneDeep(data.value)
     const _data = ref<any>(Builder<any>()
         .firstName(_.firstName)
@@ -179,7 +223,7 @@ const register = async () => {
         .gender(_.gender)
         .dateOfBirth({ day: data.value.day, month: data.value.month, year: data.value.year })
         .build())
-
+    
     await _postRegister(_data.value).then(() => { closeModal() })
 
 }
@@ -189,15 +233,13 @@ const loginExist = (login: string) => exist({ key: 'login', value: login })
 
 const _postLogin = usePost<any>('user/login')
 
-const submit = async () => {
+const handleLogin = async () => {
     if (!payload.value.login || !payload.value.password) return
     if (!await loginExist(payload.value.login)) return
 
     const [jwt, user] = await _postLogin(payload.value)
     if (!user) return
-    console.log('before:', authenticationCookie.value)
-    login({ jwt, principal: user })
-    console.log('after:', authenticationCookie.value)
+    login({ jwt, currentUser: user })
 
 }
 

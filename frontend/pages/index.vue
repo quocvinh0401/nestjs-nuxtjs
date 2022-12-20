@@ -6,7 +6,7 @@
             <div class="flex space-x-3">
                 <avatar/>
                 <div class="flex-1 px-4 rounded-full bg-gray-default hover:bg-gray-200 cursor-pointer text-gray-400 flex items-center"
-                    @click="displayModal = true">
+                    @click="_modal.isOpen = true">
                     What's on your mind?</div>
             </div>
 
@@ -15,15 +15,15 @@
             <!-- bottom -->
             <div class="grid grid-cols-3">
                 <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                    <icon name="heroicons:video-camera-solid" size="20" class="text-red-500" />
+                    <icon name="heroicons:video-camera-solid" :size="20" class="text-red-500" />
                     <p class="text-gray-400 font-semibold">Live video</p>
                 </div>
                 <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                    <icon name="material-symbols:photo" size="20" class="text-green-500" />
+                    <icon name="material-symbols:photo" :size="20" class="text-green-500" />
                     <p class="text-gray-400 font-semibold">Photo/video</p>
                 </div>
                 <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                    <icon name="bi:emoji-smile" size="20" class="text-yellow-500" />
+                    <icon name="bi:emoji-smile" :size="20" class="text-yellow-500" />
                     <p class="text-gray-400 font-semibold">Feeling/activity</p>
                 </div>
             </div>
@@ -35,18 +35,9 @@
         <post></post>
 
         <!-- modal create post -->
-        <div v-if="displayModal" class="absolute top-0 left-0 z-10 w-full h-screen flex items-center justify-center">
-            <div class="absolute w-full h-full bg-white opacity-60"></div>
-            <div class="z-10 shadow-2xl w-[31.25rem] bg-white">
-                <div class="relative flex items-center justify-center p-4">
-                    <h3 class="font-bold text-xl">Create post</h3>
-                    <button class="absolute right-3 p-2 bg-gray-default hover:bg-gray-200 rounded-full"
-                        @click="closeModal">
-                        <icon name="ic:baseline-clear" size="22" />
-                    </button>
-                </div>
-                <horizontal />
-                <div class="p-4">
+        <modal v-if="_modal.isOpen" title="Create post" @close="closeModal">
+            <div>
+                <div class="p-2">
                     <div class="flex space-x-2">
                         <avatar/>
                         <div>
@@ -66,14 +57,17 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </modal>
     </div>
 </template>
 
 <script setup lang="ts">
-const displayModal = ref<boolean>(false)
+
+import { Modal as iModal } from '~/shared/interface';
 
 const {data: posts, refresh} = useFetchWithCredentials('posts')
+
+const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
 const options = [
     {
@@ -109,7 +103,7 @@ const options = [
 ]
 
 const closeModal = () => [
-    displayModal.value = false
+    _modal.value.isOpen = false
 ]
 
 const createPost = () => {

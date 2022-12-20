@@ -8,7 +8,7 @@
                     <div>Lorem, ipsum dolor.</div>
                 </div>
                 <div class="p-1 rounded-full hover:bg-gray-default cursor-pointer option hidden">
-                    <icon name="bx:dots-horizontal-rounded" size="20" class="text-gray-700"/>
+                    <icon name="bx:dots-horizontal-rounded" :size="20" class="text-gray-700"/>
                 </div>
             </div>
             <div class="text-sm text-gray-600 px-4">

@@ -11,7 +11,7 @@
             </div>
             <div>
                 <div class="p-2 hover:bg-gray-default rounded-full cursor-pointer" @click="deletePost">
-                    <icon name="ic:outline-clear" size="20" />
+                    <icon name="ic:outline-clear" :size="20" />
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
         <!-- interact number -->
         <div class="flex justify-between text-gray-600">
             <div class="flex space-x-1 items-center">
-                <icon name="uiw:like-o" size="20" />
+                <icon name="uiw:like-o" :size="20" />
                 <p>2</p>
             </div>
             <div>9 comments</div>
@@ -37,18 +37,18 @@
             <div
                 class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer"
                 @click="handleLike">
-                <icon name="uiw:like-o" size="22" />
+                <icon name="uiw:like-o" :size="22" />
                 <span>Like</span>
             </div>
             <div
                 class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer">
-                <icon name="fluent:comment-20-regular" size="22" />
+                <icon name="fluent:comment-20-regular" :size="22" />
                 <span>Comment</span>
             </div>
             <div
                 class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer"
                 @click="handleShare">
-                <icon name="icon-park-outline:share-two" size="22" />
+                <icon name="icon-park-outline:share-two" :size="22" />
                 <span>Share</span>
             </div>
         </div>
@@ -71,14 +71,14 @@ import { Builder } from 'builder-pattern';
 import { Post } from '~/shared/post.interface'
 
 const _post = usePost<any>('post')
-const { principal } = usePrincipal()
+const { currentUser } = usePrincipal()
 
-const props = defineProps<{post: Post}>()
+// const props = defineProps<{post: Post}>()
 const cmt = ref<string>('')
 
 const handleLike = () => {
     console.log('like')
-    console.log(principal.value)
+    console.log(currentUser.value)
 }
 
 const handleShare = () => {
