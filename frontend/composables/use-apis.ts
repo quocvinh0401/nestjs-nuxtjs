@@ -121,3 +121,16 @@ export const usePost = <T>(..._paths: (string | ApiOptions)[]) => {
   return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
     await api(...pathsAndParms);
 };
+
+export const usePatch = <T>(..._paths: (string | ApiOptions)[]) => {
+  const paths = [] as string[];
+  let options: ApiOptions = {};
+  _paths.forEach((d) => {
+    if (typeof d === 'string') paths.push(d);
+    else options = d;
+  });
+  const api = useApi('PATCH', options, ...paths);
+
+  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
+    await api(...pathsAndParms);
+};

@@ -3,7 +3,7 @@
         <div class="fixed top-0 left-0 w-screen h-screen flex items-center justify-center z-50">
             <div class="z-10 bg-white shadow-xl rounded-lg">
                 <div class="flex space-x-2 justify-center items-center relative p-4 border-b">
-                    <h3 class="font-semibold text-3xl">{{ title }}</h3>
+                    <h3 class="font-semibold text-2xl">{{ title }}</h3>
                     <button class="p-2 rounded-full hover:bg-gray-200 absolute right-2 top-2" @click="emits('close')">
                         <icon name="ic:baseline-clear" :size="22" />
                     </button>

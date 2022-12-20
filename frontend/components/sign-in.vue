@@ -8,8 +8,10 @@
             </div>
             <!-- right side -->
             <div class="flex flex-col space-y-4 items-center border rounded-xl p-4 bg-white shadow-md">
-                <input type="text" placeholder="Email address or phone number" v-model="payload.login">
-                <input type="password" placeholder="Password" v-model="payload.password">
+                <form @keydown.enter="handleLogin" class="grid gap-4 w-full">
+                    <input type="text" placeholder="Email address or phone number" v-model="payload.login" autofocus>
+                    <input type="password" placeholder="Password" v-model="payload.password">
+                </form>
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>
                 <span class="text-blue-500 cursor-pointer hover:underline">Forgotten password?</span>
                 <button class="bg-green-500 hover:bg-green-600" @click="_modal.isOpen = true">Create New

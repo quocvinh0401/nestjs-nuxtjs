@@ -9,7 +9,7 @@ import { Service } from './support/service';
 import { hash, compare } from 'bcrypt';
 import { UserMapper } from './mappers/user.mapper';
 import { AuthenticationDTO } from '@/dto/authentication.dto';
-import { JwtService } from '@nestjs/jwt'
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService extends Service<User, UserDTO> {
@@ -43,9 +43,9 @@ export class UserService extends Service<User, UserDTO> {
   async login(dto: AuthenticationDTO): Promise<any> {
     const user = await this.em.findOne(User, { login: dto.login });
     if (user && (await compare(dto.password, user.password))) {
-      user.status = UserStatus.ONLINE
-      this.em.flush()
-      const payload = Builder<any>().login(user.login).build()
+      user.status = UserStatus.ONLINE;
+      this.em.flush();
+      const payload = Builder<any>().login(user.login).build();
       return [this.jwtService.sign(payload), this.mapper.toDTO(user)];
     } else {
       return false;
@@ -56,5 +56,12 @@ export class UserService extends Service<User, UserDTO> {
     const user = await this.em.findOne(User, { login: value });
     if (user) return true;
     return false;
+  }
+
+  async logout(dto: UserDTO): Promise<void> {
+    const user = await this.em.findOne(User, { login: dto.login });
+    if (user) user.status = UserStatus.OFFLINE;
+
+    this.em.flush();
   }
 }

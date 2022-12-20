@@ -2,7 +2,7 @@ import { AuthenticationDTO } from '@/dto/authentication.dto';
 import { UserDTO } from '@/dto/user.dto';
 import { UserService } from '@/services/user.service';
 import { Controller } from '@nestjs/common';
-import { Body, Get, Post, Query } from '@nestjs/common/decorators';
+import { Body, Get, Patch, Post, Query } from '@nestjs/common/decorators';
 
 @Controller('user')
 export class UserController {
@@ -24,5 +24,10 @@ export class UserController {
   @Post('login')
   login(@Body() dto: AuthenticationDTO): Promise<any> {
     return this.service.login(dto);
+  }
+
+  @Patch('logout')
+  logout(@Body() dto: UserDTO): Promise<void> {
+    return this.service.logout(dto)
   }
 }

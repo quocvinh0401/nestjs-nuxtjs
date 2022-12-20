@@ -33,7 +33,7 @@
             </div>
             <div 
                 class="bg-gray-200 hover:bg-gray-300 p-2 rounded-full cursor-pointer"
-                @click="logout">
+                @click="handleLogout">
                 <icon name="teenyicons:game-controller-solid" :size="24"/>
             </div>
         </div>
@@ -41,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import { User } from '~/shared/user.interface';
+
 const { logout, currentUser } = usePrincipal()
 
 const tabActived = ref<number>(0)
@@ -87,6 +89,13 @@ const menusRight = ref([
         icon: 'material-symbols:arrow-drop-down'
     },
 ])
+
+const _patch = usePatch<User>('user/logout')
+
+const handleLogout = async () => {
+    await _patch(currentUser.value)
+    logout()
+}
 </script>
 
 <style scoped>

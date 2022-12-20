@@ -21,7 +21,7 @@ export class PostService extends Service<Post, PostDTO> {
     }
 
     create(dto: any){
-        const post = this.em.create(Post, Builder<Post>().title(dto.content).build())
-        this.em.persistAndFlush(post)
+        // const post = this.em.create(Post, Builder<Post>().title(dto.content).build())
+        // this.em.persistAndFlush(post)
     }
 }
