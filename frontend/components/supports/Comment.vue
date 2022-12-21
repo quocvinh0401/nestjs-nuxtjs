@@ -20,6 +20,10 @@
     </div>
 </template>
 
+<script setup lang="ts">
+
+</script>
+
 <style scoped>
 .comment:hover .option {
     @apply block

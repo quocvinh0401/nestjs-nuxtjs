@@ -33,10 +33,14 @@
             </div>
         </div>
         <!-- posts -->
-        <post></post>
-        <post></post>
-        <post></post>
-        <post></post>
+        <template v-for="post in posts">
+            <post :post="post"></post>
+        </template>
+        
+        <!-- footer -->
+        <footer class="my-4">
+
+        </footer>
 
         <!-- modal create post -->
         <modal v-if="_modal.isOpen" title="Create post" @close="closeModal">
@@ -45,16 +49,16 @@
                     <avatar :image="currentUser.avatar" />
                     <div>
                         <p class="font-semibold text-sm">{{ `${currentUser.firstName} ${currentUser.lastName}` }}</p>
-                        <select name="" id="" class="p-1 outline-none bg-gray-300 text-sm font-semibold rounded-lg">
+                        <select name="" id="" class="p-1 outline-none bg-gray-300 text-sm font-semibold rounded-lg" v-model="payload.manageAccess">
                             <option v-for="o in options" :value="o.value">
                                 <span>{{ o.title }}</span>
                             </option>
                         </select>
                     </div>
                 </div>
-                <textarea name="" id="" cols="30" rows="3"
+                <textarea name="" id="" cols="30" rows="3" autofocus
                     :placeholder="`What's on your mind, ${currentUser.lastName}?`"
-                    class="w-full outline-none resize-none my-4" v-model="payload.text"></textarea>
+                    class="w-full outline-none resize-none my-4" v-model="payload.content.text"></textarea>
                 <button class="bg-blue-500 w-full text-white p-2 font-semibold rounded-lg" @click="createPost">
                     Post
                 </button>
@@ -73,31 +77,31 @@ const options = [
         icon: 'fa6-solid:earth-asia',
         value: 'public'
     },
-    {
-        title: 'Friends',
-        icon: 'material-symbols:group-rounded',
-        value: 'friends'
-    },
-    {
-        title: 'Friends except',
-        icon: 'ic:round-group-remove',
-        value: 'friends_except'
-    },
-    {
-        title: 'Specific friends',
-        icon: 'material-symbols:person',
-        value: 'specific_friends'
-    },
+    // {
+    //     title: 'Friends',
+    //     icon: 'material-symbols:group-rounded',
+    //     value: 'friends'
+    // },
+    // {
+    //     title: 'Friends except',
+    //     icon: 'ic:round-group-remove',
+    //     value: 'friends-except'
+    // },
+    // {
+    //     title: 'Specific friends',
+    //     icon: 'material-symbols:person',
+    //     value: 'specific-friends'
+    // },
     {
         title: 'Only me',
         icon: 'ic:baseline-lock',
-        value: 'only_me'
+        value: 'only-me'
     },
-    {
-        title: 'Custom',
-        icon: 'icon-park-solid:setting',
-        value: 'custom'
-    },
+    // {
+    //     title: 'Custom',
+    //     icon: 'icon-park-solid:setting',
+    //     value: 'custom'
+    // },
 ]
 
 const { currentUser } = usePrincipal()
@@ -107,7 +111,10 @@ const { data: posts, refresh } = useFetchWithCredentials('posts')
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
 const payload = ref({
-    text: ''
+    content: {
+        text: ''
+    },
+    manageAccess: 'public'
 })
 
 const closeModal = () => [
@@ -119,8 +126,9 @@ const _post = usePost('post')
 
 
 const createPost = async () => {
-    await _post(payload)
+    await _post(payload.value)
     closeModal()
-    payload.value.text = ''
+    payload.value.content.text = ''
+    refresh()
 }
 </script>

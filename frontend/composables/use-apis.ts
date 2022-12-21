@@ -8,10 +8,10 @@ export const useApi = (
   ..._paths: string[]
 ) => {
   const { $config } = useNuxtApp();
-  //   const authenticationState = useAuthentication()
+  const authenticationState = useAuthentication();
   const route = useRoute();
 
-  //   const setLoading = useLoading()[1]
+  // const setLoading = useLoading()[1]
 
   const { apiBaseUrl } = $config;
   const requestInit: RequestInit = {
@@ -19,14 +19,16 @@ export const useApi = (
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
       source: route.fullPath,
     },
   };
 
-  //   if (authenticationState.value.jwt) {
-  //     requestInit.headers = {...requestInit.headers,Authorization: `Bearer ${authenticationState.value.jwt}`}
-  //   }
+  if (authenticationState.value.jwt) {
+    requestInit.headers = {
+      ...requestInit.headers,
+      Authorization: `Bearer ${authenticationState.value.jwt}`,
+    };
+  }
 
   const defaultOptions = Builder<ApiOptions>()
     .loading(true)
@@ -42,7 +44,7 @@ export const useApi = (
     })
     .build();
 
-  //   const addToast = useToasts()[1]
+  // const addToast = useToasts()[1]
 
   options = { ...defaultOptions, ...options };
   if (typeof options.alert?.title === 'string') {
@@ -77,9 +79,9 @@ export const useApi = (
       }
     }
     // if (options.loading) setLoading(true)
-    // return await fetch(input, requestInit).then(res => res.json());
     const res = await fetch(input, requestInit);
     // setLoading(false)
+
     let json: any = null;
     try {
       json = await res.json();
@@ -105,8 +107,9 @@ export const useGet = <T>(..._paths: (string | ApiOptions)[]) => {
   });
   const api = useApi('GET', options, ...paths);
 
-  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
-    await api(...pathsAndParms);
+  return async (
+    ...pathsAndParms: (string | Partial<T>)[]
+  ): Promise<T | Record<string, never>> => await api(...pathsAndParms);
 };
 
 export const usePost = <T>(..._paths: (string | ApiOptions)[]) => {
@@ -131,6 +134,7 @@ export const usePatch = <T>(..._paths: (string | ApiOptions)[]) => {
   });
   const api = useApi('PATCH', options, ...paths);
 
-  return async (...pathsAndParms: (string | Partial<T>)[]): Promise<T | Record<string, never>> =>
-    await api(...pathsAndParms);
+  return async (
+    ...pathsAndParms: (string | Partial<T>)[]
+  ): Promise<T | Record<string, never>> => await api(...pathsAndParms);
 };

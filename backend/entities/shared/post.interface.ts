@@ -1,11 +1,16 @@
+import { Long } from "bson";
+import { Comment } from "./comment.interface";
+import { ManageAccessPost } from "./enum";
 import { User } from "./user.interface";
 
 export interface Post {
-    // user: User,
-    title: string,
-    // content: Content,
-    // interact: Interact,
-    // comments: Comment[]
+    id: Long
+    user: User,
+    content: Content,
+    interact: Interact,
+    comments: Comment[],
+    manageAccess: ManageAccessPost
+    createdAt: Date
 }
 
 export interface Content {
@@ -14,12 +19,17 @@ export interface Content {
 }
 
 export interface Interact {
-    countLikes: number,
-    countComments: number,
-    countShares: number
+    like: Like[],
+    comment: Comment[],
+    share: Share[]
 }
 
-export interface Comment {
-    user: User,
-    content: Content
+export interface Like {
+    action: 'like' | 'heart',
+    user: string
+}
+
+export interface Share {
+    user: string
+    createdAt: Date
 }

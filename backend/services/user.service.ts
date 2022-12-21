@@ -24,7 +24,6 @@ export class UserService extends Service<User, UserDTO> {
   }
 
   async create(dto: UserDTO) {
-    console.log('dto----------->>>>>>>>', dto);
     const user = this.em.create(
       User,
       Builder<User>().avatar('').friends([]).status(UserStatus.OFFLINE).build(),
@@ -45,10 +44,10 @@ export class UserService extends Service<User, UserDTO> {
     if (user && (await compare(dto.password, user.password))) {
       user.status = UserStatus.ONLINE;
       this.em.flush();
-      const payload = Builder<any>().login(user.login).build();
+      const payload = Builder<any>().login(user.login).firstName(user.firstName).lastName(user.lastName).avatar(user.avatar).build();
       return [this.jwtService.sign(payload), this.mapper.toDTO(user)];
     } else {
-      return false;
+      return [];
     }
   }
 

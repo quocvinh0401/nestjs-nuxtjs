@@ -1,3 +1,5 @@
+import dist from "@vitejs/plugin-vue";
+
 export const serialize = (obj: any, prefix?: string): string => {
   const str = [];
   for (const p in obj) {
@@ -70,3 +72,21 @@ export const isValidDate = (day: number, month: number, year: number) => {
     return true
   }
 }
+
+export const formatTime = (time: Date) => {
+  const now = new Date().getTime()
+  const created = new Date(time).getTime()
+
+  let str: string = ''
+
+  const distance = (now - created) / 1000
+
+  if (distance < 60) str = Math.round(distance) + 's'
+  else if (distance < 60 * 60) str = Math.round(distance/60) + 'm'
+  else if (distance < 60 * 60 * 24) str = Math.round(distance/(60 * 60)) + 'h'
+  else if (distance < 60 * 60 * 24 * 7) str = Math.round(distance/(60 * 60 * 24)) + 'd' 
+  else if (distance < 60 * 60 * 24 * 7 * 4) str = Math.round(distance/(60 * 60 * 24 * 7)) + 'w'
+  else if (distance < 60 * 60 * 24 * 7 * 4 * 12) str = Math.round(distance/(60 * 60 * 24 * 7 * 4)) + 'm'
+  else str = Math.round(distance/(60 * 60 * 24 * 7 * 4 * 12)) + 'y'
+  return str
+} 

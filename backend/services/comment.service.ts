@@ -1,0 +1,36 @@
+import { CommentDTO } from '@/dto/comment.dto';
+import { Comment } from '@/entities/comment.entity';
+import { Query } from '@/entities/shared/interface';
+import { User } from '@/entities/user.entity';
+import { EntityManager, MongoEntityRepository } from '@mikro-orm/mongodb';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Builder } from 'builder-pattern';
+import { pick } from 'lodash';
+import { Service } from './support/service';
+
+@Injectable()
+export class CommentService extends Service<Comment, CommentDTO> {
+  constructor(
+    @InjectRepository(Comment)
+    protected readonly repository: MongoEntityRepository<Comment>,
+    protected readonly em: EntityManager,
+    protected readonly jwtService: JwtService,
+  ) {
+    super(repository, em);
+  }
+
+  async create(dto: CommentDTO, user: any): Promise<void>{
+    const _user = this.jwtService.decode(user) as User;
+    const comment = this.em.create(Comment, 
+      Builder<Comment>()
+      .postId(dto.postId)
+      .user(pick<User, keyof User>(_user, ['login', 'avatar', 'firstName', 'lastName']))
+      .content(dto.content)
+      .like([])
+      .build())
+
+    await this.em.persistAndFlush(comment)
+  }
+}

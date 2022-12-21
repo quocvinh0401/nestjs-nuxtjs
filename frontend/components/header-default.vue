@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import { usePatch } from '~/composables/use-apis';
 import { User } from '~/shared/user.interface';
 
 const { logout, currentUser } = usePrincipal()
