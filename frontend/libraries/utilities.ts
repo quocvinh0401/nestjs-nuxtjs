@@ -77,7 +77,7 @@ export const formatTime = (time: Date) => {
   const now = new Date().getTime()
   const created = new Date(time).getTime()
 
-  let str: string = ''
+  let str = ''
 
   const distance = (now - created) / 1000
 

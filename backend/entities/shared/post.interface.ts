@@ -1,10 +1,9 @@
-import { Long } from "bson";
 import { Comment } from "./comment.interface";
 import { ManageAccessPost } from "./enum";
 import { User } from "./user.interface";
 
 export interface Post {
-    id: Long
+    id: string
     user: User,
     content: Content,
     interact: Interact,

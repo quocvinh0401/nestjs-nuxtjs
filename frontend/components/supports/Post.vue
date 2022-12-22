@@ -29,8 +29,8 @@
                 <p>{{ post.interact.like.length > 0 ? post.interact.like.length : '' }}</p>
             </div>
             <div>
-                <div>{{ post.interact.comment.length > 0 ? `${post.interact.comment.length}
-                                    ${post.interact.comment.length == 1 ? 'comment' : 'comments'}` : ''
+                <div>{{ post.comments.length > 0 ? `${post.comments.length}
+                                    ${post.comments.length == 1 ? 'comment' : 'comments'}` : ''
                 }}</div>
                 <div>{{ post.interact.share.length > 0 ? `${post.interact.share.length} ${post.interact.share.length ==
                         1 ? 'share' : 'shares'}` : ''
@@ -64,9 +64,9 @@
                 <input type="text" class="flex-1 py-2 px-3 bg-gray-default rounded-full outline-none"
                     placeholder="Write a comment..." @keydown.enter="handleSubmit" v-model="cmt">
             </div>
-
-            <comment></comment>
-            <comment></comment>
+            <template v-for="comment in post.comments">
+                <comment :comment="comment" />
+            </template>
         </div>
     </div>
 </template>
@@ -74,7 +74,6 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { formatTime } from '~/libraries/utilities';
-import { Query } from '~/shared/interface';
 import { Post } from '~/shared/post.interface';
 
 const _post = usePost<any>('comment')
