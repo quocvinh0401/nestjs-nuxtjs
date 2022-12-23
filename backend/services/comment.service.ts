@@ -8,6 +8,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Builder } from 'builder-pattern';
 import { pick } from 'lodash';
+import { CommentMapper } from './mappers/comment.mapper';
 import { Service } from './support/service';
 
 @Injectable()
@@ -17,11 +18,12 @@ export class CommentService extends Service<Comment, CommentDTO> {
     protected readonly repository: MongoEntityRepository<Comment>,
     protected readonly em: EntityManager,
     protected readonly jwtService: JwtService,
+    protected readonly mapper: CommentMapper
   ) {
     super(repository, em);
   }
 
-  async create(dto: CommentDTO, user: any): Promise<void>{
+  async create(dto: CommentDTO, user: any): Promise<Comment>{
     const _user = this.jwtService.decode(user) as User;
     const comment = this.em.create(Comment, 
       Builder<Comment>()
@@ -30,7 +32,11 @@ export class CommentService extends Service<Comment, CommentDTO> {
       .content(dto.content)
       .like([])
       .build())
-
+      console.log('dto---------->>>:', dto)
+      console.log('comment --------->>>>>>>>>>',comment)
     await this.em.persistAndFlush(comment)
+
+    const commentAfter = await this.repository.findOne(comment) as Comment
+    return this.mapper.toDTO(commentAfter)
   }
 }

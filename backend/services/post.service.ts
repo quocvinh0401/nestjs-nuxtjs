@@ -39,6 +39,12 @@ export class PostService extends Service<Post, PostDTO> {
         },
       },
       {
+        $addFields: { id: '$_id' }
+      },
+      {
+        $unset: '_id'
+      },
+      {
         $sort: {
           createdAt: -1
         }
@@ -48,7 +54,7 @@ export class PostService extends Service<Post, PostDTO> {
     return posts;
   }
 
-  create(dto: any, user: any) {
+  async create(dto: any, user: any) {
     const _user = this.jwtService.decode(user) as User;
     const post = this.em.create(
       Post,
@@ -67,6 +73,11 @@ export class PostService extends Service<Post, PostDTO> {
         .comments([])
         .build(),
     );
-    this.em.persistAndFlush(post);
+    await this.em.persistAndFlush(post);
   }
+
+  async like(dto: any) {
+    console.log(dto)
+  }
+
 }

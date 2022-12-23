@@ -18,8 +18,8 @@ export class PostController {
     return this.service.create(dto, user);
   }
 
-  @Post('comment')
-  async createComment(@Body() dto: any, @AuthUser() user: any) {
-    return '';
+  @Post('like')
+  async like(@Body() dto: any){
+    return this.service.like(dto)
   }
 }

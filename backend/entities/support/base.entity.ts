@@ -1,8 +1,8 @@
 import { Property, PrimaryKey } from '@mikro-orm/core';
-import { v4 } from 'uuid';
-
+import { randomUUID } from 'crypto';
+import { random } from 'lodash';
 export class BaseEntity {
-  @PrimaryKey({ type: String, fieldName: '_id', onCreate: () => v4() })
+  @PrimaryKey({ type: String, fieldName: '_id', onCreate: () => randomUUID() })
   id!: string;
 
   @Property({ onCreate: () => new Date() })

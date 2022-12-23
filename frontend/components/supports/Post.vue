@@ -26,7 +26,7 @@
         <div class="flex justify-between text-gray-600">
             <div class="flex space-x-1 items-center">
                 <icon name="uiw:like-o" :size="20" />
-                <p>{{ post.interact.like.length > 0 ? post.interact.like.length : '' }}</p>
+                <p>{{ likeArray.length > 0 ? likeArray.length : '' }}</p>
             </div>
             <div>
                 <div>{{ post.comments.length > 0 ? `${post.comments.length}
@@ -40,9 +40,10 @@
 
         <!-- interact action -->
         <div class="grid grid-cols-3 gap-2 py-1 border-y my-3">
-            <div class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer"
+            <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer"
+                :class="isLike ? 'text-blue-500' : 'text-gray-600'"
                 @click="handleLike">
-                <icon name="uiw:like-o" :size="22" />
+                <icon :name="isLike ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'" :size="22" />
                 <span>Like</span>
             </div>
             <div
@@ -62,9 +63,9 @@
             <div class="flex space-x-3">
                 <avatar :image="post.user.avatar" />
                 <input type="text" class="flex-1 py-2 px-3 bg-gray-default rounded-full outline-none"
-                    placeholder="Write a comment..." @keydown.enter="handleSubmit" v-model="cmt">
+                    placeholder="Write a comment..." @keydown.enter="handleSubmit" v-model="content.text">
             </div>
-            <template v-for="comment in post.comments">
+            <template v-for="comment in comments">
                 <comment :comment="comment" />
             </template>
         </div>
@@ -74,15 +75,36 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { formatTime } from '~/libraries/utilities';
-import { Post } from '~/shared/post.interface';
+// import { Comment } from '~/shared/comment.interface';
+import { Like, Post } from '~/shared/post.interface';
 
-const _post = usePost<any>('comment')
+const _postComment = usePost<any>('comment')
+
+const _postLike = usePost<any>('post')
 
 const props = defineProps<{ post: Post }>()
 
-const cmt = ref<string>('')
+const { currentUser } = usePrincipal()
 
-const handleLike = () => {
+const content = ref<any>({
+    text: ''
+})
+
+const isLike = ref<boolean>(props.post.interact.like.filter(l => l.user.login == currentUser.value.login).length > 0)
+
+const likeArray = computed(()=> props.post.interact.like)
+
+const handleLike = async () => {
+    isLike.value = !isLike.value
+    const _like = Builder<Like>().action('like').user(currentUser.value).build()
+
+    await _postLike('like', _like)
+    if (!isLike.value) {
+        const index = likeArray.value.findIndex(l => l.user.login == currentUser.value.login)
+        likeArray.value.splice(index, 1)
+    } else {
+        likeArray.value.push(_like)
+    }
     console.log('like')
 }
 
@@ -90,11 +112,13 @@ const handleShare = () => {
     console.log('share')
 }
 
-// const comments = ref<Comment[]>([])
+const comments = computed<any[]>(()=> props.post.comments)
 
 const handleSubmit = async () => {
-    await _post({ content: { text: cmt.value }, postId: props.post.id })
-    cmt.value = ''
+    const _ = Builder<any>().content(content.value).postId(props.post.id).build()
+    const comment = await _postComment(_)
+    comments.value.unshift(comment)
+    content.value.text = ''
 }
 
 const deletePost = () => {
