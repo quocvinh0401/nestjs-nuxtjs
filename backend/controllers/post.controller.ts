@@ -3,6 +3,7 @@ import { Post as PostEntity } from '@/entities/post.entity';
 import { AuthUser } from '@/security/decorator/auth-user.decorator';
 import { PostService } from '@/services/post.service';
 import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Param } from '@nestjs/common/decorators';
 
 @Controller(['post', 'posts'])
 export class PostController {
@@ -18,8 +19,8 @@ export class PostController {
     return this.service.create(dto, user);
   }
 
-  @Post('like')
-  async like(@Body() dto: any){
-    return this.service.like(dto)
+  @Post('like/:id')
+  async like(@Body() dto: any, @Param('id') id: string){
+    return this.service.like(dto, id)
   }
 }

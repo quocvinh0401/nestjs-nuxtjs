@@ -76,8 +76,20 @@ export class PostService extends Service<Post, PostDTO> {
     await this.em.persistAndFlush(post);
   }
 
-  async like(dto: any) {
-    console.log(dto)
+  async like(dto: any, id: string) {
+    console.log({dto, id})
+    const post = await this.repository.findOne(id) as Post
+    console.log('post before:', post)
+    const _like = post.interact.like
+    const index = post.interact.like.findIndex(l => l.user.login == dto.user.login)
+    if (index == -1) {
+      _like.push(dto)
+    }
+    else {
+      _like.splice(index, 1)
+    }
+    console.log('post after:', post)
+    this.em.flush()
   }
 
 }

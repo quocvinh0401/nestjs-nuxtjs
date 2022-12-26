@@ -24,10 +24,11 @@
 
         <!-- interact number -->
         <div class="flex justify-between text-gray-600">
-            <div class="flex space-x-1 items-center">
-                <icon name="uiw:like-o" :size="20" />
+            <div v-if="likeArray.length > 0" class="flex space-x-1 items-center">
+                <icon name="heroicons:hand-thumb-up-20-solid" :size="20" class="text-blue-500" />
                 <p>{{ likeArray.length > 0 ? likeArray.length : '' }}</p>
             </div>
+            <div v-else></div>
             <div>
                 <div>{{ post.comments.length > 0 ? `${post.comments.length}
                                     ${post.comments.length == 1 ? 'comment' : 'comments'}` : ''
@@ -41,8 +42,7 @@
         <!-- interact action -->
         <div class="grid grid-cols-3 gap-2 py-1 border-y my-3">
             <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer"
-                :class="isLike ? 'text-blue-500' : 'text-gray-600'"
-                @click="handleLike">
+                :class="isLike ? 'text-blue-500' : 'text-gray-600'" @click="handleLike">
                 <icon :name="isLike ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'" :size="22" />
                 <span>Like</span>
             </div>
@@ -92,13 +92,13 @@ const content = ref<any>({
 
 const isLike = ref<boolean>(props.post.interact.like.filter(l => l.user.login == currentUser.value.login).length > 0)
 
-const likeArray = computed(()=> props.post.interact.like)
+const likeArray = computed(() => props.post.interact.like)
 
 const handleLike = async () => {
     isLike.value = !isLike.value
     const _like = Builder<Like>().action('like').user(currentUser.value).build()
 
-    await _postLike('like', _like)
+    await _postLike('like', props.post.id, _like)
     if (!isLike.value) {
         const index = likeArray.value.findIndex(l => l.user.login == currentUser.value.login)
         likeArray.value.splice(index, 1)
@@ -112,7 +112,7 @@ const handleShare = () => {
     console.log('share')
 }
 
-const comments = computed<any[]>(()=> props.post.comments)
+const comments = computed<any[]>(() => props.post.comments)
 
 const handleSubmit = async () => {
     const _ = Builder<any>().content(content.value).postId(props.post.id).build()
