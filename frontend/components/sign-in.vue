@@ -40,7 +40,6 @@ import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
 import { getDaysMonthsYears , isValidDate } from '~/libraries/utilities'
 import { cloneDeep } from 'lodash'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
