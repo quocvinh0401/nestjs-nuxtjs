@@ -56,3 +56,7 @@ body {
   @apply text-red-500 text-sm
 }
 /* custom formkit */
+
+.container > div {
+  @apply bg-white shadow-md rounded-lg
+}

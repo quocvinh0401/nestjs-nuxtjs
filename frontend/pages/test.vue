@@ -13,7 +13,6 @@ const _post = usePost<Post>('test1')
 
 const testPost = async () => {
     const res = await _post()
-    console.log(res)
     _.value = res
 }
 </script>

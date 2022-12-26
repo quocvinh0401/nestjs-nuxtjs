@@ -32,8 +32,6 @@ export class CommentService extends Service<Comment, CommentDTO> {
       .content(dto.content)
       .like([])
       .build())
-      console.log('dto---------->>>:', dto)
-      console.log('comment --------->>>>>>>>>>',comment)
     await this.em.persistAndFlush(comment)
 
     const commentAfter = await this.repository.findOne(comment) as Comment

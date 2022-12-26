@@ -7,5 +7,5 @@ const props = defineProps({
     image: String
 })
 
-const image = computed<string>(() => props.image || 'https://i.pinimg.com/736x/75/df/bd/75dfbdf97dfee730f413ad347816da62.jpg')
+const image = computed<string>(() => props.image || '/images/avatar-default.jpg')
 </script>

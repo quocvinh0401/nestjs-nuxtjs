@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white px-4 py-3 rounded-lg shadow-md">
+    <div class="px-4 py-3">
         <!-- header -->
         <div class="flex justify-between mb-4">
             <div class="flex space-x-3">

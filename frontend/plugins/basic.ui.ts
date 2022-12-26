@@ -4,7 +4,8 @@ import Comment from '~/components/supports/Comment.vue';
 import Horizontal from '~/components/supports/Horizontal.vue'
 import Icon from '~/components/supports/Icon.vue';
 import Modal from '~/components/supports/Modal.vue'
-import Post from '~/components/supports/Post.vue'
+import Post from '~/components/supports/Post.vue';
+import Story from '~/components/supports/Story.vue';
 
 export default defineNuxtPlugin((nuxtapp) => {
   nuxtapp.vueApp.component('avatar', Avatar);
@@ -14,4 +15,5 @@ export default defineNuxtPlugin((nuxtapp) => {
   nuxtapp.vueApp.component('icon', Icon);
   nuxtapp.vueApp.component('modal', Modal);
   nuxtapp.vueApp.component('post', Post);
+  nuxtapp.vueApp.component('story', Story);
 });

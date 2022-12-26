@@ -10,13 +10,17 @@
             <div class="flex flex-col space-y-4 items-center border rounded-xl p-4 bg-white shadow-md">
                 <form @keydown.enter="handleLogin" class="grid gap-4 w-full">
                     <input type="text" placeholder="Email address or phone number" v-model="payload.login" autofocus>
-                    <input type="password" placeholder="Password" v-model="payload.password">
+                    <div class="relative flex items-center">
+                        <input :type="typePassword" placeholder="Password" v-model="payload.password" class="!pr-7">
+                        <icon v-if="payload.password" :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'" class="absolute right-2 text-gray-600" size="20" @click="togglePasswordType"/>
+                    </div>
                 </form>
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>
                 <span class="text-blue-500 cursor-pointer hover:underline">Forgotten password?</span>
                 <button class="bg-green-500 hover:bg-green-600" @click="_modal.isOpen = true">Create New
                     Account</button>
             </div>
+
         </div>
         <modal v-if="_modal.isOpen" @close="closeModal" :title="_modal.title">
             <div class="w-[28rem]">
@@ -36,6 +40,7 @@ import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
 import { getDaysMonthsYears , isValidDate } from '~/libraries/utilities'
 import { cloneDeep } from 'lodash'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
@@ -51,6 +56,13 @@ const payload = ref<Payload>({
     login: '',
     password: ''
 })
+
+const typePassword = ref<string>('password')
+
+const togglePasswordType = () => {
+    if (typePassword.value == 'password') typePassword.value = 'text'
+    else typePassword.value = 'password'
+}
 
 const data = ref<any>(Builder<any>()
     .firstName('')
