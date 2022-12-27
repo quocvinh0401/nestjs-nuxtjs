@@ -60,17 +60,12 @@ export class PostService extends Service<Post, PostDTO> {
       Post,
       Builder<Post>()
         .user(
-          pick<User, keyof User>(_user, [
-            'login',
-            'avatar',
-            'firstName',
-            'lastName',
-          ]),
-        )
+          pick<User, keyof User>(_user, [ 'login', 'avatar', 'firstName', 'lastName']))
         .manageAccess(dto.manageAccess)
         .content(dto.content)
         .interact(Builder<Interact>().like([]).comment([]).share([]).build())
         .comments([])
+        .hideUserList([])
         .build(),
     );
     await this.em.persistAndFlush(post);

@@ -10,5 +10,6 @@ export class PostDTO implements iPost {
   interact!: Interact;
   comments!: Comment[];
   manageAccess!: ManageAccessPost;
-  createdAt!: Date
+  hideUserList!: User[];
+  createdAt!: Date;
 }

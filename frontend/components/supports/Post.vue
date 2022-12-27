@@ -31,20 +31,26 @@
             <div v-else></div>
             <div>
                 <div>{{ post.comments.length > 0 ? `${post.comments.length}
-                                    ${post.comments.length == 1 ? 'comment' : 'comments'}` : ''
-                }}</div>
+                    ${post.comments.length == 1 ? 'comment' : 'comments'}` : ''
+}}</div>
                 <div>{{ post.interact.share.length > 0 ? `${post.interact.share.length} ${post.interact.share.length ==
-                        1 ? 'share' : 'shares'}` : ''
-                }}</div>
+        1 ? 'share' : 'shares'}` : ''
+}}</div>
             </div>
         </div>
 
         <!-- interact action -->
         <div class="grid grid-cols-3 gap-2 py-1 border-y my-3">
-            <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer"
+            <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer relative reaction-container"
                 :class="isLike ? 'text-blue-500' : 'text-gray-600'" @click="handleLike">
                 <icon :name="isLike ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'" :size="22" />
                 <span>Like</span>
+                <div
+                    class="invisible flex absolute -top-0 -left-3 border shadow-md rounded-full bg-white reaction-item">
+                    <div v-for="gif in reactionLike" class="hover:scale-125">
+                        <img :src="gif.gif" alt="" class="w-12 max-w-none">
+                    </div>
+                </div>
             </div>
             <div
                 class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer">
@@ -81,6 +87,37 @@ import { Like, Post } from '~/shared/post.interface';
 const _postComment = usePost<any>('comment')
 
 const _postLike = usePost<any>('post')
+
+const reactionLike = [
+    {
+        action: 'like',
+        gif: 'images/gif/reaction/like.gif'
+    },
+    {
+        action: 'heart',
+        gif: 'images/gif/reaction/heart.gif'
+    },
+    // {
+    //     action: 'care',
+    //     gif: 'images/gif/reaction/care.gif'
+    // },
+    {
+        action: 'haha',
+        gif: 'images/gif/reaction/haha.gif'
+    },
+    {
+        action: 'wow',
+        gif: 'images/gif/reaction/wow.gif'
+    },
+    {
+        action: 'sad',
+        gif: 'images/gif/reaction/sad.gif'
+    },
+    {
+        action: 'angry',
+        gif: 'images/gif/reaction/angry.gif'
+    }
+]
 
 const props = defineProps<{ post: Post }>()
 
@@ -125,3 +162,10 @@ const deletePost = () => {
     console.log('delete')
 }
 </script>
+
+<style scoped>
+.reaction-container:hover>.reaction-item {
+    @apply visible -top-12;
+    @apply transition-all delay-300;
+}
+</style>

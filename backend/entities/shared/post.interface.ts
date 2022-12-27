@@ -9,6 +9,7 @@ export interface Post {
   interact: Interact;
   comments: Comment[];
   manageAccess: ManageAccessPost;
+  hideUserList: User[];
   createdAt: Date;
 }
 

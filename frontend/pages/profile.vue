@@ -4,6 +4,7 @@
         <div>Upload file</div>
         <input type="file" @change="uploadFile" />
     </div>
+    <img src="/images/emoji-facebook.gif" alt="">
 </template>
 
 <script setup lang="ts">

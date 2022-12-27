@@ -3,8 +3,8 @@ import { Interact, Content } from '@/entities/shared/post.interface';
 import { Post as iPost } from './shared/post.interface';
 import { BaseEntity } from './support/base.entity';
 import { ManageAccessPost } from './shared/enum';
-import { User } from './user.entity';
 import { Comment } from './shared/comment.interface';
+import { User } from './shared/user.interface';
 
 @Entity()
 export class Post extends BaseEntity implements iPost {
@@ -22,4 +22,7 @@ export class Post extends BaseEntity implements iPost {
 
   @Property()
   manageAccess!: ManageAccessPost;
+
+  @Property()
+  hideUserList!: User[];
 }

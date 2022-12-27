@@ -1,9 +1,7 @@
 <template>
     <div
         class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 cursor-pointer relative shadow story">
-        <!-- <div class="w-full h-full" :class="`bg-[url('${story.background ? story.background : '/images/avatar-default.jpg'}')]`"></div> -->
-        <div class="w-full h-full bg-cover bg-no-repeat story-background transition-all"
-            :class="`bg-[url('${backgroundStory}')]`"></div>
+        <img :src="backgroundStory" alt="" class="h-full object-cover story-background transition-all">
         <div class="absolute bg-black opacity-50 w-full h-full"></div>
         <div class="w-10 h-10 box-border rounded-full p-[1px] border-[3px] border-blue-500 absolute top-2 left-2">
             <avatar class="!w-full !h-full" />

@@ -1,5 +1,6 @@
 import { UserController } from '@/controllers/user.controller';
 import { User } from '@/entities/user.entity';
+import { JwtStrategy } from '@/security/passport.jwt.strategy';
 import { UserMapper } from '@/services/mappers/user.mapper';
 import { UserService } from '@/services/user.service';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
@@ -19,6 +20,6 @@ import { JwtModule } from '@nestjs/jwt';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, UserMapper],
+  providers: [JwtStrategy, UserService, UserMapper],
 })
 export class UserModule {}

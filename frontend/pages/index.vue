@@ -1,39 +1,51 @@
 <template>
-    <div
-        class="flex-1 basis-[30rem] md:min-w-[30rem] max-w-[30rem] lg:min-w-[37rem] lg:basis-[37rem] lg:w-[37rem] pt-4 flex flex-col space-y-5 relative container">
-        <!-- story reel -->
-        <div>
-            <div class="grid grid-cols-2 space-x-2 my-1 mx-2">
-                <div class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative" :class="((tabActived == 'story') && 'hover:bg-white')" @click="tabActived = 'story'">
-                    <div class="flex justify-center space-x-2" :class="tabActived == 'story' ? 'text-blue-500' : 'text-gray-500'">
-                        <icon name="ion:book" :size="24"/>
-                        <span class="font-semibold">Story</span>
-                    </div>
-                    <div class="absolute h-1 w-full left-0 -bottom-1 rounded" :class="tabActived == 'story' && 'bg-blue-500'"></div>
-                </div>
-                <div class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative" :class="((tabActived == 'reel') && 'hover:bg-white')" @click="tabActived = 'reel'">
-                    <div class="flex justify-center space-x-2" :class="tabActived == 'reel' ? 'text-blue-500' : 'text-gray-500'">
-                        <icon name="mdi:clapperboard-play" :size="24"/>
-                        <span class="font-semibold">Reel</span>
-                    </div>
-                    <div class="absolute h-1 w-full left-0 -bottom-1 rounded" :class="tabActived == 'reel' && 'bg-blue-500'"></div>
-                </div>
-            </div>
-            <div class="px-4 py-3 border-t flex gap-4 overflow-hidden">
-                <!-- create story -->
-                <div class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 flex-col cursor-pointer create-story">
-                    <div class="flex justify-center overflow-hidden h-3/4">
-                        <div class="bg-cover bg-no-repeat w-full avatar-story" :class="`bg-[url('${currentUser.avatar ? currentUser.avatar : '/images/avatar-default.jpg'}')]`"></div>
-                    </div>
-                    <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
-                        <span>Create story</span>
-                        <div class="bg-white absolute top-0 rounded-full p-1 -translate-y-2/4">
-                            <icon name="clarity:plus-circle-solid" class="text-blue-500" size="36"/>
+    <div class="flex justify-between space-x-2 relative pr-1">
+        <!-- left side -->
+        <navigation-default></navigation-default>
+        <!-- middle -->
+        <div class="flex-1 flex justify-center">
+            <div
+                class="flex-1 basis-[30rem] md:min-w-[30rem] max-w-[30rem] lg:min-w-[37rem] lg:basis-[37rem] lg:w-[37rem] pt-4 flex flex-col space-y-5 relative container">
+                <!-- story reel -->
+                <div>
+                    <div class="grid grid-cols-2 space-x-2 my-1 mx-2">
+                        <div class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative"
+                            :class="((tabActived == 'story') && 'hover:bg-white')" @click="tabActived = 'story'">
+                            <div class="flex justify-center space-x-2"
+                                :class="tabActived == 'story' ? 'text-blue-500' : 'text-gray-500'">
+                                <icon name="ion:book" :size="24" />
+                                <span class="font-semibold">Story</span>
+                            </div>
+                            <div class="absolute h-1 w-full left-0 -bottom-1 rounded"
+                                :class="tabActived == 'story' && 'bg-blue-500'"></div>
+                        </div>
+                        <div class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative"
+                            :class="((tabActived == 'reel') && 'hover:bg-white')" @click="tabActived = 'reel'">
+                            <div class="flex justify-center space-x-2"
+                                :class="tabActived == 'reel' ? 'text-blue-500' : 'text-gray-500'">
+                                <icon name="mdi:clapperboard-play" :size="24" />
+                                <span class="font-semibold">Reel</span>
+                            </div>
+                            <div class="absolute h-1 w-full left-0 -bottom-1 rounded"
+                                :class="tabActived == 'reel' && 'bg-blue-500'"></div>
                         </div>
                     </div>
-                    <div></div>
-                </div>
-                <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
+                    <div class="px-4 py-3 border-t flex gap-4 overflow-hidden">
+                        <!-- create story -->
+                        <div
+                            class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 flex-col cursor-pointer create-story">
+                            <div class="flex justify-center overflow-hidden h-3/4 avatar-story">
+                                <img src="/images/avatar-default.jpg" alt="" class="object-cover h-full transition-all">
+                            </div>
+                            <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
+                                <span>Create story</span>
+                                <div class="bg-white absolute top-0 rounded-full p-1 -translate-y-2/4">
+                                    <icon name="clarity:plus-circle-solid" class="text-blue-500" size="36" />
+                                </div>
+                            </div>
+                            <div></div>
+                        </div>
+                        <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
                     <div class="flex items-center space-x-2">
                         <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>
                         <span>Share everyday moments with friends and family.</span>
@@ -47,22 +59,22 @@
                         <span>Replies and reactions are private.</span>
                     </div>
                 </div> -->
-                <story/>
-                <story/>
-                <story/>
-                <story/>
-                <story/>
-            </div>
-        </div>
-        <!-- write post -->
-        <div class="px-4 py-3">
-            <!-- top -->
-            <div class="flex space-x-3">
-                <avatar :image="currentUser.avatar" />
-                <div class="flex-1 px-4 rounded-full bg-gray-default hover:bg-gray-200 cursor-pointer text-gray-400 flex items-center"
-                    @click="_modal.isOpen = true">
-                    What's on your mind, {{ currentUser.lastName }}?</div>
-            </div>
+                        <story />
+                        <story />
+                        <story />
+                        <story />
+                        <story />
+                    </div>
+                </div>
+                <!-- write post -->
+                <div class="px-4 py-3">
+                    <!-- top -->
+                    <div class="flex space-x-3">
+                        <avatar :image="currentUser.avatar" />
+                        <div class="flex-1 px-4 rounded-full bg-gray-default hover:bg-gray-200 cursor-pointer text-gray-400 flex items-center"
+                            @click="_modal.isOpen = true">
+                            What's on your mind, {{ currentUser.lastName }}?</div>
+                    </div>
 
                     <horizontal class="my-3" />
 
@@ -198,17 +210,12 @@ const createPost = async () => {
 </script>
 
 <style scoped>
-
 .create-story {
     @apply relative;
 }
 
-.avatar-story {
-    transition: all 0.1s ease;
-}
-
-.create-story:hover .avatar-story {
-    scale: 1.05;
+.create-story:hover .avatar-story>img {
+    scale: 1.02;
 }
 
 .create-story::before {
