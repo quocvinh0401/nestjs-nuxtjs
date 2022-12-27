@@ -1,6 +1,6 @@
 import { PostDTO } from '@/dto/post.dto';
 import { Post } from '@/entities/post.entity';
-import { Interact } from '@/entities/shared/post.interface';
+import { Interact, Like } from '@/entities/shared/post.interface';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
 import { MongoEntityRepository, EntityManager } from '@mikro-orm/mongodb';
@@ -21,8 +21,16 @@ export class PostService extends Service<Post, PostDTO> {
     super(repository, em);
   }
 
-  async find(): Promise<Post[]> {
+  async find(user: any): Promise<Post[]> {
+    const _user = this.jwtService.decode(user) as User;
     const posts = await this.em.aggregate(Post, [
+      {
+        $match: {
+          hideUserList: {
+            $nin: [_user.login]
+          }
+        }
+      },
       {
         $lookup: {
           from: 'comment',
@@ -71,20 +79,24 @@ export class PostService extends Service<Post, PostDTO> {
     await this.em.persistAndFlush(post);
   }
 
-  async like(dto: any, id: string) {
-    console.log({dto, id})
+  async like(dto: Like, id: string) {
     const post = await this.repository.findOne(id) as Post
-    console.log('post before:', post)
     const _like = post.interact.like
-    const index = post.interact.like.findIndex(l => l.user.login == dto.user.login)
+    const index = _like.findIndex(l => l.user.login == dto.user.login)
     if (index == -1) {
       _like.push(dto)
     }
     else {
-      _like.splice(index, 1)
+      if (dto.action) _like[index].action = dto.action
+      else _like.splice(index, 1)
     }
-    console.log('post after:', post)
     this.em.flush()
   }
 
+  async delete(id: string, user: any){
+    const _user = this.jwtService.decode(user) as User;
+    const post = await this.repository.findOne(id) as Post
+    post.hideUserList.push(_user.login)
+    await this.em.flush()
+  }
 }

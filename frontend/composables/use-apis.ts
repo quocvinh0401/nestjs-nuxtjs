@@ -22,7 +22,7 @@ export const useApi = (
       source: route.fullPath,
     },
   };
-
+  console.log('authen',authenticationState.value)
   if (authenticationState.value.jwt) {
     requestInit.headers = {
       ...requestInit.headers,
@@ -78,6 +78,7 @@ export const useApi = (
         requestInit.body = JSON.stringify(body);
       }
     }
+    console.log(requestInit)
     // if (options.loading) setLoading(true)
     const res = await fetch(input, requestInit);
     // setLoading(false)
@@ -133,6 +134,20 @@ export const usePatch = <T>(..._paths: (string | ApiOptions)[]) => {
     else options = d;
   });
   const api = useApi('PATCH', options, ...paths);
+
+  return async (
+    ...pathsAndParms: (string | Partial<T>)[]
+  ): Promise<T | Record<string, never>> => await api(...pathsAndParms);
+};
+
+export const useDelete = <T>(..._paths: (string | ApiOptions)[]) => {
+  const paths = [] as string[];
+  let options: ApiOptions = {};
+  _paths.forEach((d) => {
+    if (typeof d === 'string') paths.push(d);
+    else options = d;
+  });
+  const api = useApi('DELETE', options, ...paths);
 
   return async (
     ...pathsAndParms: (string | Partial<T>)[]

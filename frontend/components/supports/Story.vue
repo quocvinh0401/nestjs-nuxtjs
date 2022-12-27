@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ story: any }>()
+// const props = defineProps<{ story: any }>()
 const backgroundStory = computed<string>(() => '/images/background-default.jpg')
 // const backgroundStory = computed<string>(()=> props.story.background || '/images/background-default.jpg')
 </script>

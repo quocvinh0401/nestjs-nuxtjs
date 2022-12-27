@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div>
-                <div class="p-2 hover:bg-gray-default rounded-full cursor-pointer" @click="deletePost">
+                <div class="p-2 hover:bg-gray-default rounded-full cursor-pointer" @click="emits('deletePost')">
                     <icon name="ic:outline-clear" :size="20" />
                 </div>
             </div>
@@ -25,7 +25,17 @@
         <!-- interact number -->
         <div class="flex justify-between text-gray-600">
             <div v-if="likeArray.length > 0" class="flex space-x-1 items-center">
-                <icon name="heroicons:hand-thumb-up-20-solid" :size="20" class="text-blue-500" />
+                <div class="flex">
+                    <template v-for="reaction in reactionAction.slice(0,3)">
+                        <div v-if="reaction.length > 0" class="relative flex justify-center reaction">
+                            <img :src="`/images/reaction/${reaction[0].action}.png`" alt="" class="w-5 h-5 cursor-pointer">
+                            <!-- <div class="absolute translate-y-7 z-10 whitespace-nowrap flex flex-col bg-black opacity-70 text-white text-sm p-2 rounded-lg">
+                                <span class="capitalize mb-2 text-base font-semibold">{{ reaction[0].action }}</span>
+                                <span v-for="r in reaction" class="leading-tight">{{ `${r.user.firstName} ${r.user.lastName}` }}</span>
+                            </div> -->
+                        </div>
+                    </template>
+                </div>
                 <p>{{ likeArray.length > 0 ? likeArray.length : '' }}</p>
             </div>
             <div v-else></div>
@@ -41,14 +51,18 @@
 
         <!-- interact action -->
         <div class="grid grid-cols-3 gap-2 py-1 border-y my-3">
-            <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer relative reaction-container"
-                :class="isLike ? 'text-blue-500' : 'text-gray-600'" @click="handleLike">
-                <icon :name="isLike ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'" :size="22" />
-                <span>Like</span>
+            <div class=" relative reaction-container">
+                <div class="flex space-x-2 items-center justify-center py-2 rounded-lg hover:bg-gray-default cursor-pointer" 
+                    @click="likeStatus = likeStatus ? '' : 'like'" :class="_displayReaction?.style || 'text-gray-500'">
+                    <icon v-if="!likeStatus || likeStatus == 'like'" :name="likeStatus ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'" :size="22" />
+                    <img v-else :src="_displayReaction?.icon" alt="" class="w-5 h-5 object-cover">
+                    <span class="capitalize font-semibold">{{ _displayReaction?.action || 'Like' }}</span>
+                </div>
                 <div
-                    class="invisible flex absolute -top-0 -left-3 border shadow-md rounded-full bg-white reaction-item">
-                    <div v-for="gif in reactionLike" class="hover:scale-125">
-                        <img :src="gif.gif" alt="" class="w-12 max-w-none">
+                    class="invisible flex absolute left-0 border shadow-md rounded-full bg-white reaction-item cursor-pointer">
+                    <div v-for="(value, action) in displayReaction" class="relative flex justify-center" @click="handleLike(value.action)">
+                        <img :src="value.gif" alt="" class="w-12 max-w-none hover:scale-150">
+                        <span class="hidden capitalize absolute -top-6 px-1 py-[2px] rounded-3xl text-xs bg-black opacity-80 text-white">{{ value.action }}</span>
                     </div>
                 </div>
             </div>
@@ -83,41 +97,15 @@ import { Builder } from 'builder-pattern';
 import { formatTime } from '~/libraries/utilities';
 // import { Comment } from '~/shared/comment.interface';
 import { Like, Post } from '~/shared/post.interface';
+import { displayReaction } from '~/support/dictionary';
 
 const _postComment = usePost<any>('comment')
 
 const _postLike = usePost<any>('post')
 
-const reactionLike = [
-    {
-        action: 'like',
-        gif: 'images/gif/reaction/like.gif'
-    },
-    {
-        action: 'heart',
-        gif: 'images/gif/reaction/heart.gif'
-    },
-    // {
-    //     action: 'care',
-    //     gif: 'images/gif/reaction/care.gif'
-    // },
-    {
-        action: 'haha',
-        gif: 'images/gif/reaction/haha.gif'
-    },
-    {
-        action: 'wow',
-        gif: 'images/gif/reaction/wow.gif'
-    },
-    {
-        action: 'sad',
-        gif: 'images/gif/reaction/sad.gif'
-    },
-    {
-        action: 'angry',
-        gif: 'images/gif/reaction/angry.gif'
-    }
-]
+const emits = defineEmits(['deletePost'])
+
+const _displayReaction = computed(()=> displayReaction[likeStatus.value])
 
 const props = defineProps<{ post: Post }>()
 
@@ -127,26 +115,39 @@ const content = ref<any>({
     text: ''
 })
 
-const isLike = ref<boolean>(props.post.interact.like.filter(l => l.user.login == currentUser.value.login).length > 0)
+const likeStatus = ref<any>(props.post.interact.like?.find(l => l.user.login == currentUser.value.login)?.action || '')
 
 const likeArray = computed(() => props.post.interact.like)
 
-const handleLike = async () => {
-    isLike.value = !isLike.value
-    const _like = Builder<Like>().action('like').user(currentUser.value).build()
+const reactionAction = computed(()=> [
+    likeArray.value.filter(l => l.action == 'like'),
+    likeArray.value.filter(l => l.action == 'heart'),
+    likeArray.value.filter(l => l.action == 'wow'),
+    likeArray.value.filter(l => l.action == 'haha'),
+    likeArray.value.filter(l => l.action == 'sad'),
+    likeArray.value.filter(l => l.action == 'angry'),
+].sort((a, b) => b.length - a.length))
 
-    await _postLike('like', props.post.id, _like)
-    if (!isLike.value) {
-        const index = likeArray.value.findIndex(l => l.user.login == currentUser.value.login)
-        likeArray.value.splice(index, 1)
-    } else {
-        likeArray.value.push(_like)
-    }
-    console.log('like')
+const handleLike = async (action: "like" | "heart" | "haha" | "wow" | "sad" | "angry") => {
+    if (likeStatus.value != action) likeStatus.value = action
 }
 
+watch(()=> likeStatus.value, async (value)=> {
+    const _like = Builder<Like>().action(value).user(currentUser.value).build()
+    const index = likeArray.value.findIndex(l => l.user.login == currentUser.value.login)
+    if (!value) {
+        likeArray.value.splice(index, 1)
+    }
+    else {
+        index == -1 ? likeArray.value.push(_like) : likeArray.value[index].action = value
+    }
+    await _postLike('like', props.post.id, _like)
+})
+
 const handleShare = () => {
-    console.log('share')
+    // console.log('share')
+    console.log(props.post.interact.like?.find(l => l.user.login == currentUser.value.login)?.action)
+    console.log(likeStatus.value)
 }
 
 const comments = computed<any[]>(() => props.post.comments)
@@ -158,8 +159,8 @@ const handleSubmit = async () => {
     content.value.text = ''
 }
 
-const deletePost = () => {
-    console.log('delete')
+const deletePost = (id: string) => {
+    console.log('delete ', id)
 }
 </script>
 
@@ -168,4 +169,9 @@ const deletePost = () => {
     @apply visible -top-12;
     @apply transition-all delay-300;
 }
+
+.reaction-item>div:hover>span {
+    @apply block
+}
+
 </style>

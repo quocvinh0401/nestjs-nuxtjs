@@ -24,5 +24,5 @@ export class Post extends BaseEntity implements iPost {
   manageAccess!: ManageAccessPost;
 
   @Property()
-  hideUserList!: User[];
+  hideUserList!: string[];
 }

@@ -12,7 +12,7 @@
                     <input type="text" placeholder="Email address or phone number" v-model="payload.login" autofocus>
                     <div class="relative flex items-center">
                         <input :type="typePassword" placeholder="Password" v-model="payload.password" class="!pr-7">
-                        <icon v-if="payload.password" :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'" class="absolute right-2 text-gray-600" size="20" @click="togglePasswordType"/>
+                        <icon v-if="payload.password" :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'" class="absolute right-2 text-gray-600" :size="20" @click="togglePasswordType"/>
                     </div>
                 </form>
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>

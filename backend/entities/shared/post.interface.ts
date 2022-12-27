@@ -9,7 +9,7 @@ export interface Post {
   interact: Interact;
   comments: Comment[];
   manageAccess: ManageAccessPost;
-  hideUserList: User[];
+  hideUserList: string[];
   createdAt: Date;
 }
 
@@ -25,7 +25,7 @@ export interface Interact {
 }
 
 export interface Like {
-  action: 'like' | 'heart';
+  action: 'like' | 'heart' | 'wow' | 'haha' | 'sad' | 'angry';
   user: User;
 }
 

@@ -40,22 +40,22 @@
                             <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
                                 <span>Create story</span>
                                 <div class="bg-white absolute top-0 rounded-full p-1 -translate-y-2/4">
-                                    <icon name="clarity:plus-circle-solid" class="text-blue-500" size="36" />
+                                    <icon name="clarity:plus-circle-solid" class="text-blue-500" :size="36" />
                                 </div>
                             </div>
                             <div></div>
                         </div>
                         <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
                     <div class="flex items-center space-x-2">
-                        <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>
+                        <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" :size="22"/>
                         <span>Share everyday moments with friends and family.</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <icon name="et:alarmclock" class="text-gray-500" size="22"/>
+                        <icon name="et:alarmclock" class="text-gray-500" :size="22"/>
                         <span>Stories disappear after 24 hours.</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <icon name="ph:messenger-logo-thin" class="text-gray-500" size="22"/>
+                        <icon name="ph:messenger-logo-thin" class="text-gray-500" :size="22"/>
                         <span>Replies and reactions are private.</span>
                     </div>
                 </div> -->
@@ -99,7 +99,7 @@
                 </div>
                 <!-- posts -->
                 <template v-for="post in posts">
-                    <post :post="post"></post>
+                    <post :post="post" @deletePost="deletePost(post.id)"></post>
                 </template>
 
                 <!-- footer -->
@@ -180,7 +180,7 @@ const options = [
 
 const { currentUser } = usePrincipal()
 
-const { data: posts, refresh } = useFetchWithCredentials('posts')
+const { data: posts, refresh } = useFetchWithCredentials<any>('posts')
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
@@ -199,13 +199,19 @@ const closeModal = () => [
 
 const _post = usePost('post')
 
-
+const _delete = useDelete('post')
 
 const createPost = async () => {
-    await _post(payload.value)
-    closeModal()
-    payload.value.content.text = ''
-    refresh()
+    await _post(payload.value).then(()=>{
+        closeModal()
+        payload.value.content.text = ''
+        refresh()
+    })
+    
+}
+
+const deletePost = async (id: string) => {
+    await _delete(id)
 }
 </script>
 

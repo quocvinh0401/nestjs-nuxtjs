@@ -17,7 +17,7 @@ type Principal = {
 
 export const usePrincipal = (): Principal => {
     const authenticationCookie = useCookie<Authentication>('authenticationCookie', { path: '/', default: () => ({ authenticated: false }) })
-    const authentication = useAuthentication(authenticationCookie.value)
+    const authentication = useAuthentication(authenticationCookie.value!)
 
     const isAuthenticated = computed(() => authentication.value.authenticated || false)
 
@@ -25,7 +25,7 @@ export const usePrincipal = (): Principal => {
 
     const login = (_authentication: Pick<Authentication, 'currentUser' | 'jwt'>) => {
         currentUser.value = _authentication.currentUser as User
-        const _currentUser: Partial<User> = { login: _authentication.currentUser.login }
+        const _currentUser: Partial<User> = { login: _authentication.currentUser?.login }
         authentication.value = { ..._authentication, authenticated: true }
         authenticationCookie.value = { authenticated: true, jwt: _authentication.jwt, currentUser: _currentUser }
     }

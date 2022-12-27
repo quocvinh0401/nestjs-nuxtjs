@@ -11,7 +11,7 @@
         
         <horizontal class="my-2"/>
 
-        <card v-for="i in 20"/>
+        <card v-for="i in 1"/>
         
     </div>
 </template>
