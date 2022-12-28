@@ -1,4 +1,5 @@
 import dist from "@vitejs/plugin-vue";
+import { User } from "~/shared/user.interface";
 
 export const serialize = (obj: any, prefix?: string): string => {
   const str = [];
@@ -89,4 +90,8 @@ export const formatTime = (time: Date) => {
   else if (distance < 60 * 60 * 24 * 7 * 4 * 12) str = Math.round(distance/(60 * 60 * 24 * 7 * 4)) + 'm'
   else str = Math.round(distance/(60 * 60 * 24 * 7 * 4 * 12)) + 'y'
   return str
+} 
+
+export const changeFormRoute = (user: User): string =>{
+  return `${user.firstName}.${user.lastName}`.toLowerCase().replace(/\s/g, '').normalize("NFD").replace(/[\u0300-\u036f]/g, "")
 } 

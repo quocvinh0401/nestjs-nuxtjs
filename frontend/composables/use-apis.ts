@@ -77,7 +77,6 @@ export const useApi = (
         requestInit.body = JSON.stringify(body);
       }
     }
-    console.log(requestInit)
     // if (options.loading) setLoading(true)
     const res = await fetch(input, requestInit);
     // setLoading(false)

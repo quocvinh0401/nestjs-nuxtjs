@@ -4,7 +4,7 @@ import { AuthGuard } from '@/security';
 import { AuthUser } from '@/security/decorator/auth-user.decorator';
 import { PostService } from '@/services/post.service';
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Delete, Param, UseGuards } from '@nestjs/common/decorators';
+import { Delete, Param, Patch, UseGuards } from '@nestjs/common/decorators';
 
 @Controller(['post', 'posts'])
 @UseGuards(AuthGuard)
@@ -29,5 +29,10 @@ export class PostController {
   @Delete(':id')
   async delete(@Param('id') id: string, @AuthUser() user: any){
     return this.service.delete(id, user)
+  }
+
+  @Patch('undo/:id')
+  async undoDelete(@Param('id') id: string, @AuthUser() user: any){
+    return this.service.undoDelete(id, user)
   }
 }

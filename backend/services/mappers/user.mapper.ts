@@ -9,11 +9,13 @@ export class UserMapper extends Mapper<User, UserDTO>{
     toDTO(entity: User): UserDTO {
         return Builder<UserDTO>()
             .login(entity.login)
+            .userId(entity.userId)
             .firstName(entity.firstName)
             .lastName(entity.lastName)
             .dateOfBirth(entity.dateOfBirth)
             .gender(entity.gender)
             .avatar(entity.avatar)
+            .background(entity.background)
             .friends(entity.friends)
 
             .createdAt(entity.createdAt)

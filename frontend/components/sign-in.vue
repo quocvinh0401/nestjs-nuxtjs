@@ -96,10 +96,9 @@ const schema = ref<any>([
                 name: 'firstName',
                 outerClass: '',
                 placeholder: 'First name',
-                validation: 'required|alpha',
+                validation: 'required',
                 validationMessages: {
                     'required': 'First name is required',
-                    'alpha': 'First name can only contain alphabetical characters.'
                 }
             },
             {
@@ -107,10 +106,9 @@ const schema = ref<any>([
                 name: 'lastName',
                 outerClass: '',
                 placeholder: 'Last name',
-                validation: 'required|alpha',
+                validation: 'required',
                 validationMessages: {
                     'required': 'Last name is required',
-                    'alpha': 'Last name can only contain alphabetical characters.'
                 }
             },
         ]
@@ -244,7 +242,7 @@ const handleSubmit = async () => {
 }
 
 const exist = useGet('user', 'exist')
-const loginExist = (login: string) => exist({ key: 'login', value: login })
+const loginExist = (login: string) => exist({ key: 'userId', value: login })
 
 const _postLogin = usePost<any>('user/login')
 
@@ -253,11 +251,8 @@ const handleLogin = async () => {
     if (!await loginExist(payload.value.login)) return
 
     const [jwt, user] = await _postLogin(payload.value)
-    console.log('authentication before', authentication.value)
     if (!user) return
     login({ jwt, currentUser: user })
-    console.log('cookie', authenticationCookie.value)
-    console.log('authentication after', authentication.value)
 }
 
 </script>

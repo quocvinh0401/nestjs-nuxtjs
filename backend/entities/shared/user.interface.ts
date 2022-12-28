@@ -3,8 +3,10 @@ import { DateOfBirth } from './interface';
 
 interface Infomation {
   login: string;
+  userId: string;
   password: string;
   avatar: string;
+  background: string;
   firstName: string;
   lastName: string;
   dateOfBirth: DateOfBirth;

@@ -18,6 +18,11 @@ export class UserController {
     return this.service.exist(key, value);
   }
 
+  @Get(':id')
+  async getUser(@Query('id') id: string){
+    return await this.service.getUser(id)
+  }
+
   @Post('register')
   create(@Body() dto: UserDTO): Promise<any> {
     return this.service.create(dto);
@@ -26,7 +31,6 @@ export class UserController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: AuthenticationDTO, @Res() res: Response, @Req() req: Request): Promise<any> {
-    console.log('request---->>>:', req.headers)
     return res.json(await this.service.login(dto));
   }
 

@@ -4,7 +4,9 @@
         <!-- left -->
         <div class="flex space-x-2 items-center">
             <!-- logo -->
-            <img src="/images/logo.png" class="w-14 h-14 cursor-pointer">
+            <nuxt-link to="/">
+                <img src="/images/logo.png" class="w-14 h-14 cursor-pointer">
+            </nuxt-link>
             <!-- search -->
             <div class="bg-gray-default flex items-center justify-center rounded-full overflow-hidden h-fit">
                 <icon name="ic:outline-search" :size="24" class="text-gray-500 p-2" />
@@ -25,7 +27,7 @@
 
         <!-- right -->
         <div class="flex space-x-2 items-center">
-            <nuxt-link to="/profile"
+            <nuxt-link :to="{ path: 'profile', query: { userId: `${currentUser.userId}` }}"
                 class="hidden xl:flex items-center space-x-2 hover:bg-gray-default px-2 py-1 rounded-full h-fit cursor-pointer active:bg-gray-200 active:scale-95 duration-150">
                 <avatar class="w-7 h-7" :image="currentUser.avatar" />
                 <span class="font-semibold">{{ currentUser.firstName }}</span>
@@ -43,6 +45,7 @@
 
 <script setup lang="ts">
 import { usePatch } from '~/composables/use-apis';
+import { changeFormRoute } from '~/libraries/utilities';
 import { User } from '~/shared/user.interface';
 
 const { logout, currentUser } = usePrincipal()

@@ -26,7 +26,7 @@ export class PostService extends Service<Post, PostDTO> {
       {
         $match: {
           hideUserList: {
-            $nin: [user.login]
+            $nin: [user.userId]
           }
         }
       },
@@ -66,7 +66,7 @@ export class PostService extends Service<Post, PostDTO> {
       Post,
       Builder<Post>()
         .user(
-          pick<User, keyof User>(user, [ 'login', 'avatar', 'firstName', 'lastName']))
+          pick<User, keyof User>(user, [ 'userId', 'avatar', 'background', 'firstName', 'lastName', 'friends']))
         .manageAccess(dto.manageAccess)
         .content(dto.content)
         .interact(Builder<Interact>().like([]).comment([]).share([]).build())
@@ -75,12 +75,14 @@ export class PostService extends Service<Post, PostDTO> {
         .build(),
     );
     await this.em.persistAndFlush(post);
+
+    return post
   }
 
   async like(dto: Like, id: string) {
     const post = await this.repository.findOne(id) as Post
     const _like = post.interact.like
-    const index = _like.findIndex(l => l.user.login == dto.user.login)
+    const index = _like.findIndex(l => l.user.userId == dto.user.userId)
     if (index == -1) {
       _like.push(dto)
     }
@@ -93,7 +95,14 @@ export class PostService extends Service<Post, PostDTO> {
 
   async delete(id: string, user: any){
     const post = await this.repository.findOne(id) as Post
-    post.hideUserList.push(user.login)
+    post.hideUserList.push(user.userId)
+    await this.em.flush()
+  }
+
+  async undoDelete(id: string, user: any){
+    const post = await this.repository.findOne(id) as Post
+    const index = post.hideUserList.findIndex(u => u == user.userId)
+    post.hideUserList.splice(index, 1)
     await this.em.flush()
   }
 }

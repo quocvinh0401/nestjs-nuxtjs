@@ -26,9 +26,10 @@ export class UserService extends Service<User, UserDTO> {
   async create(dto: UserDTO) {
     const user = this.em.create(
       User,
-      Builder<User>().avatar('').friends([]).status(UserStatus.OFFLINE).build(),
+      Builder<User>().avatar('').background('').friends([]).status(UserStatus.OFFLINE).build(),
     );
     user.login = dto.login;
+    user.userId = dto.userId
     user.password = await hash(dto.password, 10);
     user.firstName = dto.firstName;
     user.lastName = dto.lastName;
@@ -39,12 +40,17 @@ export class UserService extends Service<User, UserDTO> {
     return this.mapper.toDTO(user);
   }
 
+  async getUser(id: string){
+    const user = await this.repository.findOne({userId: id})
+    return this.mapper.toDTO(user!)
+  }
+
   async login(dto: AuthenticationDTO): Promise<any> {
     const user = await this.em.findOne(User, { login: dto.login });
     if (user && (await compare(dto.password, user.password))) {
       user.status = UserStatus.ONLINE;
       this.em.flush();
-      const payload = Builder<any>().login(user.login).firstName(user.firstName).lastName(user.lastName).avatar(user.avatar).build();
+      const payload = Builder<any>().userId(user.userId).firstName(user.firstName).lastName(user.lastName).avatar(user.avatar).build();
       return [this.jwtService.sign(payload), this.mapper.toDTO(user)];
     } else {
       return [];

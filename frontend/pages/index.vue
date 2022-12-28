@@ -80,8 +80,7 @@
 
                     <!-- bottom -->
                     <div class="grid grid-cols-3">
-                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default"
-                            @click="test">
+                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
                             <icon name="heroicons:video-camera-solid" :size="20" class="text-red-500" />
                             <p class="text-gray-400 font-semibold">Live video</p>
                         </div>
@@ -98,9 +97,9 @@
                     </div>
                 </div>
                 <!-- posts -->
-                <template v-for="post in posts">
-                    <post :post="post" @deletePost="deletePost(post.id)"></post>
-                </template>
+                <div v-for="post in posts" :key="post.id">
+                    <post :post="post"></post>
+                </div>
 
                 <!-- footer -->
                 <footer class="my-4">
@@ -143,6 +142,7 @@
 
 <script setup lang="ts">
 
+import { dataToEsm } from '@rollup/pluginutils';
 import { Modal as iModal } from '~/shared/interface';
 
 const options = [
@@ -199,26 +199,15 @@ const closeModal = () => [
 
 const _post = usePost('post')
 
-const _delete = useDelete('post')
-
 const createPost = async () => {
-    await _post(payload.value).then(() => {
+    await _post(payload.value).then((res) => {
+        posts.value.unshift(res)
         closeModal()
         payload.value.content.text = ''
-        refresh()
     })
 
 }
 
-const deletePost = async (id: string) => {
-    await _delete(id)
-}
-
-
-const { authentication } = usePrincipal()
-const test = () => {
-    console.log(authentication.value)
-}
 </script>
 
 <style scoped>
