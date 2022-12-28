@@ -22,7 +22,6 @@ export const useApi = (
       source: route.fullPath,
     },
   };
-  console.log('authen',authenticationState.value)
   if (authenticationState.value.jwt) {
     requestInit.headers = {
       ...requestInit.headers,

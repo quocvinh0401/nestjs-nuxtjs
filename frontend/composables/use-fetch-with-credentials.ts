@@ -11,6 +11,7 @@ export const useFetchWithCredentials = <T>(
 ) => {
   const { $config } = useNuxtApp();
   const route = useRoute();
+  const authenticationState  = useAuthentication()
 
   const { initialize, ...rest } = options ?? [];
 
@@ -19,7 +20,7 @@ export const useFetchWithCredentials = <T>(
   };
 
   const opts = computed(() => {
-    return {
+    const _ = {
       baseUrl: $config.apiBaseUrl,
       headers: {
         'Content-type': 'application/json',
@@ -28,6 +29,11 @@ export const useFetchWithCredentials = <T>(
       },
       ...rest,
     };
+    if (authenticationState.value.authenticated){
+      _.headers['Authorization'] = `Bearer ${authenticationState.value.jwt}`
+    }
+    return _
+
   });
 
   if (initialize) asyncDataOptions['default'] = initialize;

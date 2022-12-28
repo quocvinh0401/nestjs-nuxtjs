@@ -12,7 +12,9 @@
                     <input type="text" placeholder="Email address or phone number" v-model="payload.login" autofocus>
                     <div class="relative flex items-center">
                         <input :type="typePassword" placeholder="Password" v-model="payload.password" class="!pr-7">
-                        <icon v-if="payload.password" :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'" class="absolute right-2 text-gray-600" :size="20" @click="togglePasswordType"/>
+                        <icon v-if="payload.password"
+                            :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'"
+                            class="absolute right-2 text-gray-600" :size="20" @click="togglePasswordType" />
                     </div>
                 </form>
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>
@@ -38,13 +40,13 @@
 <script setup lang="ts">
 import { Builder } from 'builder-pattern';
 import { Modal as iModal } from '~/shared/interface';
-import { getDaysMonthsYears , isValidDate } from '~/libraries/utilities'
+import { getDaysMonthsYears, isValidDate } from '~/libraries/utilities'
 import { cloneDeep } from 'lodash'
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
 
 const router = useRouter()
-const { login, currentUser } = usePrincipal()
+const { login, currentUser, authenticationCookie, authentication } = usePrincipal()
 
 interface Payload {
     login: string,
@@ -78,7 +80,7 @@ const data = ref<any>(Builder<any>()
     .year(new Date().getFullYear())
     .build())
 
-watch(()=> [data.value.day, data.value.month, data.value.year], ([d, m, y])=> {
+watch(() => [data.value.day, data.value.month, data.value.year], ([d, m, y]) => {
     data.value.isErrorDate = isValidDate(d, m, y) ? false : true
 })
 
@@ -236,7 +238,7 @@ const handleSubmit = async () => {
         .gender(_.gender)
         .dateOfBirth({ day: data.value.day, month: data.value.month, year: data.value.year })
         .build())
-    
+
     await _postRegister(_data.value).then(() => { closeModal() })
 
 }
@@ -251,9 +253,11 @@ const handleLogin = async () => {
     if (!await loginExist(payload.value.login)) return
 
     const [jwt, user] = await _postLogin(payload.value)
+    console.log('authentication before', authentication.value)
     if (!user) return
     login({ jwt, currentUser: user })
-
+    console.log('cookie', authenticationCookie.value)
+    console.log('authentication after', authentication.value)
 }
 
 </script>

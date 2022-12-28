@@ -8,6 +8,7 @@ export const useAuthentication = (a?: Authentication) => useState<Authentication
 
 type Principal = {
     authentication: DeepReadonly<Ref<Authentication>>,
+    authenticationCookie: any,
     currentUser: Ref<User>,
     isAuthenticated: Ref<Readonly<boolean>>,
     login: (_: Pick<Authentication, 'currentUser' | 'jwt' >) => void,
@@ -40,6 +41,6 @@ export const usePrincipal = (): Principal => {
     }
 
 
-    return { authentication: readonly(authentication), currentUser, isAuthenticated, login, logout, reset }
+    return { authentication: readonly(authentication), currentUser, isAuthenticated, login, logout, reset, authenticationCookie }
 }
 

@@ -22,12 +22,11 @@ export class PostService extends Service<Post, PostDTO> {
   }
 
   async find(user: any): Promise<Post[]> {
-    const _user = this.jwtService.decode(user) as User;
     const posts = await this.em.aggregate(Post, [
       {
         $match: {
           hideUserList: {
-            $nin: [_user.login]
+            $nin: [user.login]
           }
         }
       },
@@ -63,12 +62,11 @@ export class PostService extends Service<Post, PostDTO> {
   }
 
   async create(dto: any, user: any) {
-    const _user = this.jwtService.decode(user) as User;
     const post = this.em.create(
       Post,
       Builder<Post>()
         .user(
-          pick<User, keyof User>(_user, [ 'login', 'avatar', 'firstName', 'lastName']))
+          pick<User, keyof User>(user, [ 'login', 'avatar', 'firstName', 'lastName']))
         .manageAccess(dto.manageAccess)
         .content(dto.content)
         .interact(Builder<Interact>().like([]).comment([]).share([]).build())
@@ -94,9 +92,8 @@ export class PostService extends Service<Post, PostDTO> {
   }
 
   async delete(id: string, user: any){
-    const _user = this.jwtService.decode(user) as User;
     const post = await this.repository.findOne(id) as Post
-    post.hideUserList.push(_user.login)
+    post.hideUserList.push(user.login)
     await this.em.flush()
   }
 }

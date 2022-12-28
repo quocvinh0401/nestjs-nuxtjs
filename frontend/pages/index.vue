@@ -80,8 +80,8 @@
 
                     <!-- bottom -->
                     <div class="grid grid-cols-3">
-                        <div
-                            class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
+                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default"
+                            @click="test">
                             <icon name="heroicons:video-camera-solid" :size="20" class="text-red-500" />
                             <p class="text-gray-400 font-semibold">Live video</p>
                         </div>
@@ -114,7 +114,7 @@
                             <avatar :image="currentUser.avatar" />
                             <div>
                                 <p class="font-semibold text-sm">{{ `${currentUser.firstName} ${currentUser.lastName}`
-                                }}</p>
+}}</p>
                                 <select name="" id=""
                                     class="p-1 outline-none bg-gray-300 text-sm font-semibold rounded-lg"
                                     v-model="payload.manageAccess">
@@ -202,16 +202,22 @@ const _post = usePost('post')
 const _delete = useDelete('post')
 
 const createPost = async () => {
-    await _post(payload.value).then(()=>{
+    await _post(payload.value).then(() => {
         closeModal()
         payload.value.content.text = ''
         refresh()
     })
-    
+
 }
 
 const deletePost = async (id: string) => {
     await _delete(id)
+}
+
+
+const { authentication } = usePrincipal()
+const test = () => {
+    console.log(authentication.value)
 }
 </script>
 

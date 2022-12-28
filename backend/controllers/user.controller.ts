@@ -2,7 +2,9 @@ import { AuthenticationDTO } from '@/dto/authentication.dto';
 import { UserDTO } from '@/dto/user.dto';
 import { UserService } from '@/services/user.service';
 import { Controller } from '@nestjs/common';
-import { Body, Get, Patch, Post, Query } from '@nestjs/common/decorators';
+import { Body, Get, HttpCode, Patch, Post, Query, Req, Res } from '@nestjs/common/decorators';
+import { HttpStatus } from '@nestjs/common/enums';
+import { Request, Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -22,8 +24,10 @@ export class UserController {
   }
 
   @Post('login')
-  login(@Body() dto: AuthenticationDTO): Promise<any> {
-    return this.service.login(dto);
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() dto: AuthenticationDTO, @Res() res: Response, @Req() req: Request): Promise<any> {
+    console.log('request---->>>:', req.headers)
+    return res.json(await this.service.login(dto));
   }
 
   @Patch('logout')
