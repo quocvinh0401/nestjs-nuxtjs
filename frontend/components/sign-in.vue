@@ -14,7 +14,7 @@
                         <input :type="typePassword" placeholder="Password" v-model="payload.password" class="!pr-7">
                         <icon v-if="payload.password"
                             :name="typePassword == 'password' ? 'akar-icons:eye-slashed' : 'akar-icons:eye-open'"
-                            class="absolute right-2 text-gray-600" :size="20" @click="togglePasswordType" />
+                            class="absolute right-2 text-gray-600" size="20" @click="togglePasswordType" />
                     </div>
                 </form>
                 <button class="bg-blue-500 hover:bg-blue-600 w-full" @click="handleLogin">Log in</button>
@@ -253,6 +253,7 @@ const handleLogin = async () => {
     const [jwt, user] = await _postLogin(payload.value)
     if (!user) return
     login({ jwt, currentUser: user })
+    // router.push('/profile?userId=74069327-c5c1-460e-92c7-9af307dc23e6')
 }
 
 </script>

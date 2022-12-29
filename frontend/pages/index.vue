@@ -13,7 +13,7 @@
                             :class="((tabActived == 'story') && 'hover:bg-white')" @click="tabActived = 'story'">
                             <div class="flex justify-center space-x-2"
                                 :class="tabActived == 'story' ? 'text-blue-500' : 'text-gray-500'">
-                                <icon name="ion:book" :size="24" />
+                                <icon name="ion:book" size="24" />
                                 <span class="font-semibold">Story</span>
                             </div>
                             <div class="absolute h-1 w-full left-0 -bottom-1 rounded"
@@ -23,7 +23,7 @@
                             :class="((tabActived == 'reel') && 'hover:bg-white')" @click="tabActived = 'reel'">
                             <div class="flex justify-center space-x-2"
                                 :class="tabActived == 'reel' ? 'text-blue-500' : 'text-gray-500'">
-                                <icon name="mdi:clapperboard-play" :size="24" />
+                                <icon name="mdi:clapperboard-play" size="24" />
                                 <span class="font-semibold">Reel</span>
                             </div>
                             <div class="absolute h-1 w-full left-0 -bottom-1 rounded"
@@ -40,22 +40,22 @@
                             <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
                                 <span>Create story</span>
                                 <div class="bg-white absolute top-0 rounded-full p-1 -translate-y-2/4">
-                                    <icon name="clarity:plus-circle-solid" class="text-blue-500" :size="36" />
+                                    <icon name="clarity:plus-circle-solid" class="text-blue-500" size="36" />
                                 </div>
                             </div>
                             <div></div>
                         </div>
                         <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
                     <div class="flex items-center space-x-2">
-                        <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" :size="22"/>
+                        <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>
                         <span>Share everyday moments with friends and family.</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <icon name="et:alarmclock" class="text-gray-500" :size="22"/>
+                        <icon name="et:alarmclock" class="text-gray-500" size="22"/>
                         <span>Stories disappear after 24 hours.</span>
                     </div>
                     <div class="flex items-center space-x-2">
-                        <icon name="ph:messenger-logo-thin" class="text-gray-500" :size="22"/>
+                        <icon name="ph:messenger-logo-thin" class="text-gray-500" size="22"/>
                         <span>Replies and reactions are private.</span>
                     </div>
                 </div> -->
@@ -80,18 +80,19 @@
 
                     <!-- bottom -->
                     <div class="grid grid-cols-3">
-                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                            <icon name="heroicons:video-camera-solid" :size="20" class="text-red-500" />
+                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default"
+                            @click="test">
+                            <icon name="heroicons:video-camera-solid" size="20" class="text-red-500" />
                             <p class="text-gray-400 font-semibold">Live video</p>
                         </div>
                         <div
                             class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                            <icon name="material-symbols:photo" :size="20" class="text-green-500" />
+                            <icon name="material-symbols:photo" size="20" class="text-green-500" />
                             <p class="text-gray-400 font-semibold">Photo/video</p>
                         </div>
                         <div
                             class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
-                            <icon name="bi:emoji-smile" :size="20" class="text-yellow-500" />
+                            <icon name="bi:emoji-smile" size="20" class="text-yellow-500" />
                             <p class="text-gray-400 font-semibold">Feeling/activity</p>
                         </div>
                     </div>
@@ -144,6 +145,12 @@
 
 import { dataToEsm } from '@rollup/pluginutils';
 import { Modal as iModal } from '~/shared/interface';
+
+const cookie = useCookie('cookie')
+
+const test = () => {
+    console.log(cookie.value)
+}
 
 const options = [
     {

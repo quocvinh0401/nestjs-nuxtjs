@@ -15,7 +15,7 @@
                 </div>
                 <div>
                     <div class="p-2 hover:bg-gray-default rounded-full cursor-pointer" @click="deletePost">
-                        <icon name="ic:outline-clear" :size="20" />
+                        <icon name="ic:outline-clear" size="20" />
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
                         @click="likeStatus = likeStatus ? '' : 'like'" :class="_displayReaction?.style || 'text-gray-500'">
                         <icon v-if="!likeStatus || likeStatus == 'like'"
                             :name="likeStatus ? 'heroicons:hand-thumb-up-20-solid' : 'heroicons:hand-thumb-up'"
-                            :size="22" />
+                            size="22" />
                         <img v-else :src="_displayReaction?.icon" alt="" class="w-5 h-5 object-cover">
                         <span class="capitalize font-semibold">{{ _displayReaction?.action || 'Like' }}</span>
                     </div>
@@ -73,12 +73,12 @@
                 </div>
                 <div
                     class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer">
-                    <icon name="fluent:comment-20-regular" :size="22" />
+                    <icon name="fluent:comment-20-regular" size="22" />
                     <span>Comment</span>
                 </div>
                 <div class="flex space-x-2 items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-default cursor-pointer"
                     @click="handleShare">
-                    <icon name="icon-park-outline:share-two" :size="22" />
+                    <icon name="icon-park-outline:share-two" size="22" />
                     <span>Share</span>
                 </div>
             </div>

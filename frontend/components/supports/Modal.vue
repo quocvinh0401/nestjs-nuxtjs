@@ -5,7 +5,7 @@
                 <div class="flex space-x-2 justify-center items-center relative p-4 border-b">
                     <h3 class="font-semibold text-2xl">{{ title }}</h3>
                     <button class="p-2 rounded-full hover:bg-gray-200 absolute right-2 top-2" @click="emits('close')">
-                        <icon name="ic:baseline-clear" :size="22" />
+                        <icon name="ic:baseline-clear" size="22" />
                     </button>
                 </div>
                 <div class="p-4">
