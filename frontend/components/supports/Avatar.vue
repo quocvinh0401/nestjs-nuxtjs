@@ -1,5 +1,5 @@
 <template>
-    <div class="w-10 aspect-square rounded-full bg-cover bg-center" :style="`background-image: url('${image}')`"></div>
+    <img class="w-10 h-10 rounded-full object-cover" :src="image"/>
 </template>
 
 <script setup lang="ts">

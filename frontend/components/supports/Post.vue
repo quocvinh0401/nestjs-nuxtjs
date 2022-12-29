@@ -4,9 +4,9 @@
             <!-- header -->
             <div class="flex justify-between mb-4">
                 <div class="flex space-x-3">
-                    <avatar :image="post.user.avatar" />
+                    <avatar :image="post?.user?.avatar" />
                     <div>
-                        <h3 class="text-md font-semibold">{{ `${post.user.firstName} ${post.user.lastName}` }}</h3>
+                        <h3 class="text-md font-semibold">{{ `${post?.user?.firstName} ${post.user?.lastName}` }}</h3>
                         <div class="text-sm text-gray-500 flex items-center space-x-1">
                             <span>{{ formatTime(post?.createdAt) }} •</span>
                             <icon name="ion:earth" />
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <!-- content -->
-            <div class="mb-2">{{ post.content.text }}</div>
+            <div class="mb-2">{{ post.content?.text }}</div>
             <!-- interact number -->
             <div class="flex justify-between text-gray-600">
                 <div v-if="likeArray.length > 0" class="flex space-x-1 items-center">
@@ -40,7 +40,7 @@
                 </div>
                 <div v-else></div>
                 <div>
-                    <div>{{ post.comments.length > 0 ? `${post.comments.length}
+                    <div>{{ post.comments?.length > 0 ? `${post.comments?.length}
                         ${post.comments.length == 1 ? 'comment' : 'comments'}` : ''
             }}</div>
                     <div>{{ post.interact.share.length > 0 ? `${post.interact.share.length} ${post.interact.share.length ==
@@ -85,7 +85,7 @@
             <!-- comment -->
             <div class="grid gap-4">
                 <div class="flex space-x-3">
-                    <avatar :image="post.user.avatar" />
+                    <avatar :image="post.user?.avatar" />
                     <input type="text" class="flex-1 py-2 px-3 bg-gray-default rounded-full outline-none"
                         placeholder="Write a comment..." @keydown.enter="handleSubmit" v-model="content.text">
                 </div>

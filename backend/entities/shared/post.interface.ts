@@ -5,6 +5,7 @@ import { User } from './user.interface';
 export interface Post {
   id: string;
   user: User;
+  userId: string
   content: Content;
   interact: Interact;
   comments: Comment[];

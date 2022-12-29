@@ -6,6 +6,7 @@ import { User } from '@/entities/user.entity';
 export class PostDTO implements iPost {
   id!: string;
   user!: User;
+  userId!: string
   content!: Content;
   interact!: Interact;
   comments!: Comment[];

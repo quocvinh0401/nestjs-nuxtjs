@@ -35,7 +35,7 @@
                         <div
                             class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 flex-col cursor-pointer create-story">
                             <div class="flex justify-center overflow-hidden h-3/4 avatar-story">
-                                <img src="/images/avatar-default.jpg" alt="" class="object-cover h-full transition-all">
+                                <img :src="currentUser.avatar || '/images/avatar-default'" alt="" class="object-cover h-full transition-all">
                             </div>
                             <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
                                 <span>Create story</span>
@@ -127,7 +127,7 @@
                         <textarea name="" id="" cols="30" rows="3" autofocus
                             :placeholder="`What's on your mind, ${currentUser.lastName}?`"
                             class="w-full outline-none resize-none my-4" v-model="payload.content.text"></textarea>
-                        <button class="bg-blue-500 w-full text-white p-2 font-semibold rounded-lg" @click="createPost">
+                        <button class="blue w-full text-white p-2 font-semibold rounded-lg" @click="createPost">
                             Post
                         </button>
                     </div>
@@ -189,7 +189,7 @@ const { currentUser } = usePrincipal()
 
 const { data: posts, refresh } = useFetchWithCredentials<any>('posts')
 
-const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
+const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })
 
 const tabActived = ref<string>('story')
 

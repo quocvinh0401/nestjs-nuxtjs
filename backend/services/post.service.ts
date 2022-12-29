@@ -46,6 +46,17 @@ export class PostService extends Service<Post, PostDTO> {
         },
       },
       {
+        $lookup: {
+          from: 'user',
+          localField: 'userId',
+          foreignField: 'userId',
+          as: 'user'
+        }
+      },
+      {
+        $unwind: '$user'
+      },
+      {
         $addFields: { id: '$_id' }
       },
       {
@@ -65,8 +76,7 @@ export class PostService extends Service<Post, PostDTO> {
     const post = this.em.create(
       Post,
       Builder<Post>()
-        .user(
-          pick<User, keyof User>(user, [ 'userId', 'avatar', 'background', 'firstName', 'lastName', 'friends']))
+        .userId(user.userId)
         .manageAccess(dto.manageAccess)
         .content(dto.content)
         .interact(Builder<Interact>().like([]).comment([]).share([]).build())
@@ -75,7 +85,7 @@ export class PostService extends Service<Post, PostDTO> {
         .build(),
     );
     await this.em.persistAndFlush(post);
-
+    post.user = user
     return post
   }
 

@@ -8,7 +8,7 @@ import { randomUUID } from 'crypto';
 @Entity()
 export class User extends BaseUserEntity implements iUser {
   @PrimaryKey({ fieldName: '_id' }) login!: string;
-  @PrimaryKey({ onCreate: () => randomUUID() }) userId!: string;
+  @Property({ onCreate: () => randomUUID() }) userId!: string;
   @Property() password!: string;
   @Property() avatar!: string;
   @Property() background!: string;

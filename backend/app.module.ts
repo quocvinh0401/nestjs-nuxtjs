@@ -8,6 +8,7 @@ import configuration from './config/configuration';
 import { UserModule } from './modules/user.module';
 import { AuthenticationModule } from './modules/authentication.module';
 import { CommentModule } from './modules/comment.module';
+import { FileModule } from './modules/file.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { CommentModule } from './modules/comment.module';
 
     AuthenticationModule,
     CommentModule,
+    FileModule,
     PostModule,
     UserModule, 
   ],

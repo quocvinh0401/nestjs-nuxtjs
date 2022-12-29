@@ -24,11 +24,10 @@ export class CommentService extends Service<Comment, CommentDTO> {
   }
 
   async create(dto: CommentDTO, user: any): Promise<Comment>{
-    const _user = this.jwtService.decode(user) as User;
     const comment = this.em.create(Comment, 
       Builder<Comment>()
       .postId(dto.postId)
-      .user(pick<User, keyof User>(_user, ['login', 'avatar', 'firstName', 'lastName']))
+      .user(pick<User, keyof User>(user, ['userId', 'avatar', 'firstName', 'lastName']))
       .content(dto.content)
       .like([])
       .build())

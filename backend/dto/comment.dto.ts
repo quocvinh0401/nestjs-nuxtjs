@@ -6,6 +6,7 @@ export class CommentDTO implements iComment {
   id!: string;
   postId!: string;
   user!: User;
+  userId!: string;
   content!: Content;
   like!: Like[];
   createdAt!: Date;

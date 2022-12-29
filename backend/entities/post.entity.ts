@@ -12,6 +12,9 @@ export class Post extends BaseEntity implements iPost {
   user!: User;
 
   @Property()
+  userId!: string;
+
+  @Property()
   content!: Content;
 
   @Property()

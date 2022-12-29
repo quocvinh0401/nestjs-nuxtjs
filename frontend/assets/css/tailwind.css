@@ -7,7 +7,6 @@ body {
   @apply bg-gray-default;
 }
 
-
 /* custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -23,24 +22,23 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-lg
+  @apply bg-gray-300 rounded-lg;
 }
 
 /* custom scrollbar */
-
 
 /* custom formkit */
 .formkit-outer {
   @apply min-h-[4rem];
 }
 
-.formkit-inner > *:not([type=radio]) {
+.formkit-inner > *:not([type='radio']) {
   @apply w-full;
   @apply border rounded-lg p-2 outline-none;
 }
 
 .formkit-options {
-  @apply grid grid-cols-2 gap-5
+  @apply grid grid-cols-2 gap-5;
 }
 
 .formkit-option > .formkit-wrapper {
@@ -49,14 +47,26 @@ body {
 }
 
 .formkit-decorator {
-  @apply hidden
+  @apply hidden;
 }
 
 .formkit-message {
-  @apply text-red-500 text-sm
+  @apply text-red-500 text-sm;
 }
 /* custom formkit */
 
 .container > div {
-  @apply bg-white shadow-md rounded-lg
+  @apply bg-white shadow-md rounded-lg;
+}
+
+button {
+  @apply hover:bg-gray-200 active:bg-gray-300;
+}
+
+button .gray {
+  @apply bg-gray-default;
+}
+
+button .blue {
+  @apply bg-blue-500 hover:bg-blue-600;
 }

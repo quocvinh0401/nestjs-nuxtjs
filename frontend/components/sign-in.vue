@@ -43,7 +43,7 @@ import { Modal as iModal } from '~/shared/interface';
 import { getDaysMonthsYears, isValidDate } from '~/libraries/utilities'
 import { cloneDeep } from 'lodash'
 
-const _modal = ref<iModal>({ isOpen: false, title: 'Register', data: null })
+const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })
 
 const router = useRouter()
 const { login, currentUser, authenticationCookie, authentication } = usePrincipal()
@@ -253,6 +253,7 @@ const handleLogin = async () => {
     const [jwt, user] = await _postLogin(payload.value)
     if (!user) return
     login({ jwt, currentUser: user })
+    console.log('user', currentUser.value)
     // router.push('/profile?userId=74069327-c5c1-460e-92c7-9af307dc23e6')
 }
 

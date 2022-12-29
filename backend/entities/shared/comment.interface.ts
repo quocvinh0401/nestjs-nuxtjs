@@ -4,6 +4,7 @@ import { User } from './user.interface';
 export interface Comment {
   postId: string;
   user: User;
+  userId: string;
   content: Content;
   like: Like[];
   createdAt: Date;

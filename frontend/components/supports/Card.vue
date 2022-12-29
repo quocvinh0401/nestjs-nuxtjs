@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center space-x-3 hover:bg-gray-200 cursor-pointer p-2 rounded-lg">
         <avatar :image="user?.avatar" />
-        <div class="font-medium">{{ `${user?.lastName} ${user?.firstName}` }}</div>
+        <div class="font-medium">{{ `${user?.firstName} ${user?.lastName}` }}</div>
     </div>
 </template>
 

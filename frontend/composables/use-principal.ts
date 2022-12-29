@@ -1,7 +1,7 @@
 import { Builder } from "builder-pattern"
 import { Authentication } from "~/libraries/client.type"
 import { User } from "~/shared/user.interface"
-import { DeepReadonly, Ref } from 'vue'
+import { DeepReadonly, Ref } from '@vue/runtime-dom'
 
 export const useAuthentication = (a?: Authentication) => useState<Authentication>('authenticationState', () => (a || { authenticated: false }))
 
@@ -10,7 +10,6 @@ type Principal = {
     authentication: DeepReadonly<Ref<Authentication>>,
     authenticationCookie: any,
     currentUser: Ref<User>,
-    isAuthenticated: Ref<Readonly<boolean>>,
     login: (_: Pick<Authentication, 'currentUser' | 'jwt' >) => void,
     logout: () => void,
     reset: () => void,
@@ -19,8 +18,6 @@ type Principal = {
 export const usePrincipal = (): Principal => {
     const authenticationCookie = useCookie<Authentication>('authenticationCookie', { path: '/', default: () => ({ authenticated: false }) })
     const authentication = useAuthentication(authenticationCookie.value!)
-
-    const isAuthenticated = computed(() => authentication.value.authenticated || false)
 
     const currentUser = useState<User>('currentUser')
 
@@ -41,6 +38,6 @@ export const usePrincipal = (): Principal => {
     }
 
 
-    return { authentication: readonly(authentication), currentUser, isAuthenticated, login, logout, reset, authenticationCookie }
+    return { authentication: readonly(authentication), currentUser, login, logout, reset, authenticationCookie }
 }
 

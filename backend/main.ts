@@ -1,5 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { json } from 'express'
+import { v2 as cloudinary } from 'cloudinary'
+
+const fileUpload = require('express-fileupload')
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {cors: true});
@@ -17,5 +21,15 @@ async function bootstrap() {
     allowedHeaders: "*",
     origin: "*"
   });
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET
+  })
+  app.use(json())
+  app.use(fileUpload({
+    useTempFiles: true,
+    limits: { fileSize: 50 * 2024 * 1024}
+  }))
 }
 bootstrap();

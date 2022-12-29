@@ -1,6 +1,6 @@
 <template>
     <div
-        class="w-full border-b shadow-sm sticky top-0 left-0 flex justify-between items-center bg-white px-3 h-[69px] z-40">
+        class="w-full border-b shadow-sm sticky top-0 left-0 grid grid-cols-3 bg-white px-3 h-[69px] z-40">
         <!-- left -->
         <div class="flex space-x-2 items-center">
             <!-- logo -->
@@ -15,7 +15,7 @@
         </div>
 
         <!-- center -->
-        <div class="hidden md:flex space-x-2 my-1">
+        <div class="hidden md:flex space-x-2 my-1 place-content-center">
             <div v-for="(tab, index) in tabs" class="cursor-pointer hover:bg-gray-200 px-5 py-4 rounded-lg relative"
                 :class="((tabActived == index) && 'hover:bg-white')" @click="tabActived = index">
                 <icon :name="(tabActived == index) ? tab.iconActived : tab.icon" size="28"
@@ -26,11 +26,11 @@
         </div>
 
         <!-- right -->
-        <div class="flex space-x-2 items-center">
+        <div class="flex space-x-2 items-center place-content-end">
             <nuxt-link :to="{ path: 'profile', query: { userId: `${currentUser.userId}` } }"
                 class="hidden xl:flex items-center space-x-2 hover:bg-gray-default px-2 py-1 rounded-full h-fit cursor-pointer active:bg-gray-200 active:scale-95 duration-150">
-                <avatar class="!w-7" :image="currentUser.avatar" />
-                <span class="font-semibold">{{ currentUser.firstName }}</span>
+                <avatar class="!w-7 !h-7" :image="currentUser.avatar" />
+                <span class="font-semibold max-w-[10rem] whitespace-nowrap overflow-hidden text-ellipsis">{{ currentUser.lastName }}</span>
             </nuxt-link>
             <div v-for="(m, i) in menusRight" class="bg-gray-200 hover:bg-gray-300 p-2 rounded-full cursor-pointer"
                 :class="menuActived == i && 'bg-blue-200'" @click="menuActived = menuActived == i ? undefined : i">

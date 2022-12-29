@@ -1,3 +1,5 @@
+import { type } from "os";
+
 export interface Query {
   search?: string;
   searchType?: string;
@@ -19,7 +21,8 @@ export interface ApiOptions {
 export interface Modal {
   isOpen: boolean,
   title: string,
-  data: any
+  data: any,
+  type: string
 }
 
 export interface DateOfBirth {

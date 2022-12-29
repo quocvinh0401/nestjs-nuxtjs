@@ -7,7 +7,8 @@ import { Content, Like } from "./shared/post.interface";
 @Entity()
 export class Comment extends BaseEntity implements iComment {
     @Property() postId!: string;
-    @Property() user!: User
+    @Property() user!: User;
+    @Property() userId!: string;
     @Property() content!: Content;
     @Property() like!: Like[];
 }

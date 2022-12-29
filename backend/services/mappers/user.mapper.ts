@@ -8,7 +8,6 @@ import { Mapper } from "./support/base.mapper";
 export class UserMapper extends Mapper<User, UserDTO>{
     toDTO(entity: User): UserDTO {
         return Builder<UserDTO>()
-            .login(entity.login)
             .userId(entity.userId)
             .firstName(entity.firstName)
             .lastName(entity.lastName)

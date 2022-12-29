@@ -1,3 +1,3 @@
 import { User } from "@/entities/user.entity";
 
-export type Payload = Pick<User, 'login' | 'avatar' | 'lastName' | 'firstName' | 'friends'>
+export type Payload = Pick<User, 'userId' | 'avatar' | 'lastName' | 'firstName' | 'friends'>
