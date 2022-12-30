@@ -32,7 +32,7 @@
                     </div>
                     <div class="px-4 py-3 border-t flex gap-4 overflow-hidden">
                         <!-- create story -->
-                        <div
+                        <nuxt-link to="/story"
                             class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 flex-col cursor-pointer create-story">
                             <div class="flex justify-center overflow-hidden h-3/4 avatar-story">
                                 <img :src="currentUser.avatar || '/images/avatar-default'" alt="" class="object-cover h-full transition-all">
@@ -44,7 +44,7 @@
                                 </div>
                             </div>
                             <div></div>
-                        </div>
+                        </nuxt-link>
                         <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
                     <div class="flex items-center space-x-2">
                         <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>

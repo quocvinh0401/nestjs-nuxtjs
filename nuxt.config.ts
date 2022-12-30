@@ -4,16 +4,16 @@ const config = {
   buildDir: '.frontend',
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.BACKEND_LISTEN
-    }
+      apiBaseUrl: process.env.BACKEND_LISTEN,
+    },
   },
   css: ['~/assets/css/tailwind.css'],
   modules: ['@nuxtjs/tailwindcss', '@formkit/nuxt'],
   app: {
     head: {
-      title: 'Social Media'
-    }
-  }
+      title: 'Social Media',
+    },
+  },
 };
 
-export default config
+export default config;
