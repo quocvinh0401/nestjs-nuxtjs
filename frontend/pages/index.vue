@@ -80,8 +80,7 @@
 
                     <!-- bottom -->
                     <div class="grid grid-cols-3">
-                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default"
-                            @click="test">
+                        <div class="flex items-center justify-center space-x-2 p-2 rounded-lg cursor-pointer hover:bg-gray-default">
                             <icon name="heroicons:video-camera-solid" size="20" class="text-red-500" />
                             <p class="text-gray-400 font-semibold">Live video</p>
                         </div>
@@ -143,14 +142,8 @@
 
 <script setup lang="ts">
 
-import { dataToEsm } from '@rollup/pluginutils';
 import { Modal as iModal } from '~/shared/interface';
-
-const cookie = useCookie('cookie')
-
-const test = () => {
-    console.log(cookie.value)
-}
+import { Story as iStory } from '~/shared/story.interface'
 
 const options = [
     {
@@ -186,8 +179,10 @@ const options = [
 ]
 
 const { currentUser } = usePrincipal()
+const _post = usePost('post')
 
 const { data: posts, refresh } = useFetchWithCredentials<any>('posts')
+const { data: stories, refresh: refreshStory} = useFetchWithCredentials<iStory[]>('stories')
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })
 
@@ -203,8 +198,6 @@ const payload = ref({
 const closeModal = () => [
     _modal.value.isOpen = false
 ]
-
-const _post = usePost('post')
 
 const createPost = async () => {
     await _post(payload.value).then((res) => {

@@ -9,6 +9,7 @@ import { UserModule } from './modules/user.module';
 import { AuthenticationModule } from './modules/authentication.module';
 import { CommentModule } from './modules/comment.module';
 import { FileModule } from './modules/file.module';
+import { StoryModule } from './modules/story.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { FileModule } from './modules/file.module';
     FileModule,
     PostModule,
     UserModule, 
+    StoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
