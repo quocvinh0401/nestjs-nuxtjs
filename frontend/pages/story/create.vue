@@ -126,15 +126,18 @@
 import { Builder } from 'builder-pattern';
 import { getAverageColor } from '~/libraries/utilities';
 import { Story as iStory } from '~/shared/story.interface';
+import * as htmlToImage from 'html-to-image'
 
 definePageMeta({layout: 'story'})
 
 const { currentUser } = usePrincipal()
+const authentication = useAuthentication()
 const router = useRouter()
 const _postStory = usePost('story')
 
 const chooseCreate = ref('')
 const tempImage = ref('')
+const tempFile = ref()
 const isAdjustImage = ref<boolean>(false)
 const adjustImage = ref({
     scale: 1,
@@ -147,9 +150,11 @@ const chooseAction = async (data: string | Event) => {
         chooseCreate.value = 'text_story'
     } else {
         chooseCreate.value = 'photo_story'
-        tempImage.value = URL.createObjectURL(data.target?.files[0])
-        const img = new Image()
-        img.src = tempImage.value
+        const _ = data.target as any
+        tempImage.value = URL.createObjectURL(_.files[0])
+        tempFile.value = _.files[0]
+        // const img = new Image()
+        // img.src = tempImage.value
         // const rgb = await getAverageColor(img)
     }
 
@@ -161,12 +166,25 @@ const back = () => {
 
 const rotateImage = () => {
     adjustImage.value.rotate = (adjustImage.value.rotate + 90) % 360
-    console.log(adjustImage.value.rotate)
 }
 
 const submitStory = async () => {
-    const body = document.getElementById('story')?.outerHTML
-    const story = Builder<iStory>().body(body!).build()
-    await _postStory({body: body})
+    const formData = new FormData()
+    formData.append('file', tempFile.value)
+    const _img = 
+    await $fetch('http://localhost:4000/api/file/story', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Authorization: `Bearer ${authentication.value.jwt}`
+        }
+    })
+        .then(res => tempImage.value = res.url)
+        .then(res => {
+            const body = document.getElementById('story')?.outerHTML.replace('cursor-pointer', '')
+            const story = Builder<iStory>().body(body!).build()
+            _postStory(story)
+        })
+    navigateTo('/')
 }
 </script>

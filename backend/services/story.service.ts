@@ -33,6 +33,16 @@ export class StoryService extends Service<Story, StoryDTO> {
                 $unwind: '$user'
             },
             {
+                $group: {
+                    _id: '$userId',
+                    createdAt: { $first: '$createdAt'},
+                    user: { $first: "$user" },
+                    body: {
+                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body'},
+                    }
+                }
+            },
+            {
                 $set: {
                     id: '$_id'
                 }
@@ -42,6 +52,31 @@ export class StoryService extends Service<Story, StoryDTO> {
             }
         ]) 
         return stories
+    }
+
+    async findOne(id: string){
+        const story = await this.em.aggregate(Story, [
+            {
+                $lookup: {
+                    from: 'user',
+                    localField: 'userId',
+                    foreignField: 'userId',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: '$user'
+            },
+            {
+                $set: {
+                    id: '$_id'
+                }
+            },
+            {
+                $unset: ['user._id', 'user.password', '_id']
+            }
+        ])
+        return story
     }
 
     async create(dto: StoryDTO, user: any){

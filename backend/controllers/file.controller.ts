@@ -15,4 +15,10 @@ export class FileController {
     async avatar(@UploadedFile() file: Express.Multer.File, @AuthUser() user: any){
         return await this.service.setAvatar(file, user)
     }
+
+    @Post('story')
+    @UseInterceptors(FileInterceptor('file', { storage: storage}))
+    setPhotoStory(@UploadedFile() file: Express.Multer.File, @Body() img: any){
+        return this.service.setPhotoStory(file)
+    }
 }

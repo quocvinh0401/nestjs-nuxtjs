@@ -26,4 +26,14 @@ export class FileService extends Service<User, UserDTO>{
         await this.em.persistAndFlush(_user)
         return res
     }
+
+    async setPhotoStory(file: any){
+        const res = await cloudinary.uploader.upload(file.path, {
+            public_id: `${Date.now()}_story`,
+            resource_type: 'auto',
+            folder: 'social-media/image'
+        })
+
+        return res
+    }
 }

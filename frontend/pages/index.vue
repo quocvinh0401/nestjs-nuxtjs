@@ -45,23 +45,25 @@
                             </div>
                             <div></div>
                         </nuxt-link>
-                        <!-- <div class=" text-sm flex flex-col justify-center space-y-4">
-                    <div class="flex items-center space-x-2">
-                        <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>
-                        <span>Share everyday moments with friends and family.</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <icon name="et:alarmclock" class="text-gray-500" size="22"/>
-                        <span>Stories disappear after 24 hours.</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <icon name="ph:messenger-logo-thin" class="text-gray-500" size="22"/>
-                        <span>Replies and reactions are private.</span>
-                    </div>
-                </div> -->
-                        <template v-for="story in stories">
-                            <story :story="story"/>
-                        </template>
+                        <div v-if="stories.length == 0" class=" text-sm flex flex-col justify-center space-y-4">
+                            <div class="flex items-center space-x-2">
+                                <icon name="mdi:cards-playing-heart-multiple-outline" class="text-gray-500" size="22"/>
+                                <span>Share everyday moments with friends and family.</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <icon name="et:alarmclock" class="text-gray-500" size="22"/>
+                                <span>Stories disappear after 24 hours.</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <icon name="ph:messenger-logo-thin" class="text-gray-500" size="22"/>
+                                <span>Replies and reactions are private.</span>
+                            </div>
+                        </div>
+                        <div v-else class="flex gap-4">
+                            <nuxt-link v-for="story in stories" :key="story.id" :to="`/story/${story.id}`">
+                                <story :story="story"/>
+                            </nuxt-link>
+                        </div>
                         
                     </div>
                 </div>
@@ -186,6 +188,7 @@ const { data: _stories, refresh: refreshStory, pending} = useFetchWithCredential
 const stories = ref<any>([])
 watch(pending, ()=> {
     stories.value = _stories.value
+    console.log(stories.value)
 })
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })

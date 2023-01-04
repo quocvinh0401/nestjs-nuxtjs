@@ -148,7 +148,7 @@ const setAvatar = async (e) => {
         headers: {
             Authorization: `Bearer ${authentication.value.jwt}`
         }
-    })
+    }) as any
     currentUser.value.avatar = res.url
     _modal.value.isOpen = false
     
