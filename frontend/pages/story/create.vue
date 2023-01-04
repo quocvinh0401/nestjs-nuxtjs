@@ -31,6 +31,36 @@
                 <div class="font-semibold">Add text</div>
             </div>
 
+            <div v-else-if="chooseCreate == 'text_story'" class="p-3">
+                <!-- text -->
+                <textarea placeholder="Start typing" rows="7" class="w-full resize-none p-2 border rounded-lg outline-blue-500" v-model="content_text_story"></textarea>
+
+                <!-- font -->
+                <div class="relative flex items-center my-2">
+                    <icon name="ph:text-aa-fill" size="24" class="absolute left-2"/>
+                    <select name="font" id="font" class="w-full pl-10 pr-2 py-2 border rounded-lg outline-none">
+                        <option value="simple">Simple</option>
+                        <option value="clean">Clean</option>
+                        <option value="visual">Visual</option>
+                        <option value="fancy">Fancy</option>
+                        <option value="headline">Headline</option>
+                    </select>
+                    <!-- <icon name=""/> -->
+                </div>
+
+                <!-- background -->
+                <div class="border p-2 rounded-lg grid gap-2 mt-3">
+                    <div>Background</div>
+                    <div class="grid grid-cols-8 gap-1">
+                        <template v-for="img in 16">
+                            <button class="w-6 aspect-square rounded-full border overflow-hidden">
+                                <img src="https://img.freepik.com/free-photo/abstract-grunge-decorative-relief-navy-blue-stucco-wall-texture-wide-angle-rough-colored-background_1258-28311.jpg?w=2000" alt="" class="max-w-none object-cover"/>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
             <div class="absolute bottom-0 w-full flex space-x-2 justify-center border-t p-2">
                 <button class="font-semibold bg-gray-200 hover:bg-gray-300 active:bg-gray-400 flex-1 rounded-lg p-2">Discard</button>
                 <button class="font-semibold blue flex-1 rounded-lg p-2 text-white" @click="submitStory">Share to Story</button>
@@ -79,10 +109,10 @@
                         </div>
                     </div>
 
-                    <div v-else class="flex h-full">
+                    <div v-else class="flex h-full rounded-lg overflow-hidden">
                         <div class="h-full aspect-[0.55] overflow-hidden relative flex items-center justify-center">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Ash_Tree_-_geograph.org.uk_-_590710.jpg" class="" alt="">
-                            <div class="absolute">text</div>
+                            <div class="absolute text-red-500 font-semibold text-xl w-4/5 text-center break-words">{{ content_text_story || 'Start typing' }}</div>
                         </div>
                     </div>
                 </div>
@@ -110,6 +140,7 @@ const adjustImage = ref({
     scale: 1,
     rotate: 0
 })
+const content_text_story = ref<string>('')
 
 const chooseAction = async (data: string | Event) => {
     if (typeof data == 'string') {

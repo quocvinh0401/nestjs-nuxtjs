@@ -59,11 +59,10 @@
                         <span>Replies and reactions are private.</span>
                     </div>
                 </div> -->
-                        <story />
-                        <story />
-                        <story />
-                        <story />
-                        <story />
+                        <template v-for="story in stories">
+                            <story :story="story"/>
+                        </template>
+                        
                     </div>
                 </div>
                 <!-- write post -->
@@ -182,7 +181,12 @@ const { currentUser } = usePrincipal()
 const _post = usePost('post')
 
 const { data: posts, refresh } = useFetchWithCredentials<any>('posts')
-const { data: stories, refresh: refreshStory} = useFetchWithCredentials<iStory[]>('stories')
+const { data: _stories, refresh: refreshStory, pending} = useFetchWithCredentials<iStory[]>('stories')
+
+const stories = ref<any>([])
+watch(pending, ()=> {
+    stories.value = _stories.value
+})
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })
 

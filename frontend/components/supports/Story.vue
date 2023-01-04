@@ -11,8 +11,11 @@
 </template>
 
 <script setup lang="ts">
-// const props = defineProps<{ story: any }>()
-const backgroundStory = computed<string>(() => '/images/background-default.jpg')
+import { Story as iStory } from '~/shared/story.interface';
+
+const props = defineProps<{ story: iStory }>()
+
+const backgroundStory = computed<string>(() => props.story?.user.background || '/images/background-default.jpg')
 // const backgroundStory = computed<string>(()=> props.story.background || '/images/background-default.jpg')
 </script>
 

@@ -7,6 +7,7 @@ import { Injectable } from "@nestjs/common";
 import { Builder } from "builder-pattern";
 import { Service } from "./support/service";
 import { JwtService } from "@nestjs/jwt";
+import { StoryMapper } from "./mappers/story.mapper";
 
 @Injectable()
 export class StoryService extends Service<Story, StoryDTO> {
@@ -14,7 +15,8 @@ export class StoryService extends Service<Story, StoryDTO> {
         @InjectRepository(Story)
         protected readonly repository: MongoEntityRepository<Story>,
         protected readonly em: EntityManager,
-        protected readonly jwtService: JwtService
+        protected readonly jwtService: JwtService,
+        protected readonly mapper: StoryMapper
     ){ super(repository, em)}
 
     async find(){
@@ -29,9 +31,17 @@ export class StoryService extends Service<Story, StoryDTO> {
             },
             {
                 $unwind: '$user'
+            },
+            {
+                $set: {
+                    id: '$_id'
+                }
+            },
+            {
+                $unset: ['user._id', 'user.password', '_id']
             }
-        ])
-        console.log(stories)
+        ]) 
+        return stories
     }
 
     async create(dto: StoryDTO, user: any){
