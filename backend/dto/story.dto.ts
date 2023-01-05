@@ -6,5 +6,6 @@ export class StoryDTO implements Story {
     user!: User;
     userId!: string;
     body!: string;
+    viewers!: string[]
     createdAt!: Date;
 }

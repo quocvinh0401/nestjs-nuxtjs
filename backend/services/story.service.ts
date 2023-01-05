@@ -33,12 +33,17 @@ export class StoryService extends Service<Story, StoryDTO> {
                 $unwind: '$user'
             },
             {
+                $sort: {
+                    createdAt: 1
+                }
+            },
+            {
                 $group: {
                     _id: '$userId',
                     createdAt: { $first: '$createdAt'},
                     user: { $first: "$user" },
                     body: {
-                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body'},
+                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body', viewers: '$viewers'},
                     }
                 }
             },
@@ -57,6 +62,11 @@ export class StoryService extends Service<Story, StoryDTO> {
     async findOne(id: string){
         const story = await this.em.aggregate(Story, [
             {
+                $match: {
+                    userId: id
+                }
+            },
+            {
                 $lookup: {
                     from: 'user',
                     localField: 'userId',
@@ -66,6 +76,16 @@ export class StoryService extends Service<Story, StoryDTO> {
             },
             {
                 $unwind: '$user'
+            },
+            {
+                $group: {
+                    _id: '$userId',
+                    createdAt: { $first: '$createdAt'},
+                    user: { $first: "$user" },
+                    body: {
+                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body'},
+                    }
+                }
             },
             {
                 $set: {
@@ -84,6 +104,7 @@ export class StoryService extends Service<Story, StoryDTO> {
             Builder<Story>()
             .body(dto.body)
             .userId(user.userId)
+            .viewers([])
             .build()
             )
         await this.em.persistAndFlush(story)

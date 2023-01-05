@@ -6,4 +6,5 @@ export interface Story {
     userId: string;
     createdAt: Date;
     body: string;
+    viewers: string[]
 }

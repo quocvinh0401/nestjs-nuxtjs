@@ -253,7 +253,6 @@ const handleLogin = async () => {
     const [jwt, user] = await _postLogin(payload.value)
     if (!user) return
     login({ jwt, currentUser: user })
-    console.log('user', currentUser.value)
     // router.push('/profile?userId=74069327-c5c1-460e-92c7-9af307dc23e6')
 }
 

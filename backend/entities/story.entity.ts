@@ -8,4 +8,5 @@ export class Story extends BaseEntity implements iStory {
     @Property() user!: User;
     @Property() userId!: string;
     @Property() body!: string;
+    @Property() viewers!: string[];
 }

@@ -126,7 +126,6 @@
 import { Builder } from 'builder-pattern';
 import { getAverageColor } from '~/libraries/utilities';
 import { Story as iStory } from '~/shared/story.interface';
-import * as htmlToImage from 'html-to-image'
 
 definePageMeta({layout: 'story'})
 

@@ -35,7 +35,7 @@
                         <nuxt-link to="/story"
                             class="w-28 aspect-[0.55] border rounded-lg overflow-hidden flex flex-shrink-0 flex-col cursor-pointer create-story">
                             <div class="flex justify-center overflow-hidden h-3/4 avatar-story">
-                                <img :src="currentUser.avatar || '/images/avatar-default'" alt="" class="object-cover h-full transition-all">
+                                <img :src="currentUser.avatar || '/images/avatar-default.jpg'" alt="" class="object-cover h-full transition-all">
                             </div>
                             <div class="font-semibold text-sm flex flex-1 items-center justify-center pt-2 relative">
                                 <span>Create story</span>
@@ -188,7 +188,6 @@ const { data: _stories, refresh: refreshStory, pending} = useFetchWithCredential
 const stories = ref<any>([])
 watch(pending, ()=> {
     stories.value = _stories.value
-    console.log(stories.value)
 })
 
 const _modal = ref<iModal>({ isOpen: false, title: 'Register', type: '', data: null })
