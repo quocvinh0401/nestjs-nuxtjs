@@ -5,12 +5,12 @@
         </button>
 
         <div class="h-5/6 flex justify-center relative">
-            <div v-html="story.body[order - 1].content" class="flex justify-center"></div>
+            <div v-html="story?.body[order - 1]?.content" class="flex justify-center"></div>
             <div class="flex flex-col items-center justify-between text-white absolute h-full aspect-[0.55]">
                 <div class="w-full p-2">
                     <!-- scroll bar -->
                     <div class="flex space-x-2 w-full">
-                        <div v-for="s in story.body.length" class="relative overflow-hidden w-full">
+                        <div v-for="s in story?.body.length" class="relative overflow-hidden w-full">
                             <div class="w-full h-2 bg-gray-400 rounded-lg opacity-50"></div>
                             <div class="absolute h-full bg-gray-default left-0 top-0 rounded-lg"
                                 :style="{ width: `${width <= s * 100 ? ((width - (s - 1) * 100) % 100) : 100}%` }">
@@ -21,9 +21,9 @@
                     <!--  -->
                     <div class="flex justify-between items-center mt-2">
                         <div class="flex items-center space-x-2">
-                            <avatar :image="story.user.avatar" />
-                            <span>{{ story.user.firstName }} {{ story.user.lastName }}</span>
-                            <span>{{ formatTime(story.createdAt) }}</span>
+                            <avatar :image="story?.user.avatar" />
+                            <span>{{ story?.user.firstName }} {{ story?.user.lastName }}</span>
+                            <span>{{ formatTime(story?.createdAt) }}</span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <button>
@@ -53,10 +53,11 @@ definePageMeta({ layout: 'story-detail' })
 
 const route = useRoute()
 const _getStory = useGet('story')
+const { currentUser } = usePrincipal()
 
 const id_story = route.params.id
 const story = ref()
-await _getStory(id_story).then(res => story.value = res.find(r => r.id == id_story))
+// await _getStory(id_story).then(res => story.value = res.find(r => r.id == id_story))
 const order = ref<number>(1)
 const playButton = ref<boolean>(true)
 const sound = ref<boolean>(true)
@@ -90,7 +91,19 @@ onMounted(() => {
     }, 50)
 })
 
-onBeforeMount(() => {
+onBeforeUnmount(() => {
     clearInterval(interval)
+})
+
+onBeforeMount(async ()=>{
+    await _getStory(id_story)
+        .then(res => {
+            story.value = res.find(r => r.id == id_story)
+            const index = story.value.body.findIndex(_ => !_.viewers.includes(currentUser.value.userId))
+            if (index > 0){
+                order.value = index + 1
+                width.value = index * 100
+            }
+        })
 })
 </script>

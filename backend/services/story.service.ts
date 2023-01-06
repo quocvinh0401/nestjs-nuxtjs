@@ -83,7 +83,7 @@ export class StoryService extends Service<Story, StoryDTO> {
                     createdAt: { $first: '$createdAt'},
                     user: { $first: "$user" },
                     body: {
-                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body'},
+                        $push: {id: '$_id', createdAt: '$createdAt', content: '$body', viewers: '$viewers'},
                     }
                 }
             },
