@@ -8,7 +8,7 @@
                     <div>
                         <h3 class="text-md font-semibold">{{ `${post?.user?.firstName} ${post.user?.lastName}` }}</h3>
                         <div class="text-sm text-gray-500 flex items-center space-x-1">
-                            <span>{{ formatTime(post?.createdAt) }} •</span>
+                            <span>{{ formatTime(post?.createdAt, 1) }} •</span>
                             <icon name="ion:earth" />
                         </div>
                     </div>

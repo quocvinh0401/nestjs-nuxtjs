@@ -126,6 +126,8 @@
 import { Builder } from 'builder-pattern';
 import { getAverageColor } from '~/libraries/utilities';
 import { Story as iStory } from '~/shared/story.interface';
+import domtoimage from 'dom-to-image';
+import html2canvas from 'html2canvas'
 
 definePageMeta({layout: 'story'})
 
@@ -168,22 +170,23 @@ const rotateImage = () => {
 }
 
 const submitStory = async () => {
-    const formData = new FormData()
-    formData.append('file', tempFile.value)
-    const _img = 
-    await $fetch('http://localhost:4000/api/file/story', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            Authorization: `Bearer ${authentication.value.jwt}`
-        }
-    })
-        .then(res => tempImage.value = res.url)
-        .then(res => {
-            const body = document.getElementById('story')?.outerHTML.replace('cursor-pointer', '')
-            const story = Builder<iStory>().body(body!).build()
-            _postStory(story)
-        })
-    navigateTo('/')
+    const body = document.getElementById('story') as HTMLElement
+    html2canvas(body).then(res => document.body.appendChild(res))
+    // const formData = new FormData()
+    // formData.append('file', tempFile.value)
+    // await $fetch('http://localhost:4000/api/file/story', {
+    //     method: 'POST',
+    //     body: formData,
+    //     headers: {
+    //         Authorization: `Bearer ${authentication.value.jwt}`
+    //     }
+    // })
+    //     .then(res => tempImage.value = res.url)
+    //     .then(res => {
+    //         const body = document.getElementById('story')?.outerHTML.replace('cursor-pointer', '')
+    //         const story = Builder<iStory>().body(body!).build()
+    //         _postStory(story)
+    //     })
+    // navigateTo('/')
 }
 </script>

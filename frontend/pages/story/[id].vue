@@ -1,18 +1,19 @@
 <template>
     <div class="bg-black flex items-center justify-center overflow-hidden">
-        <button class="p-3 bg-white shadow rounded-full">
-            <icon name="material-symbols:arrow-back-ios-rounded"/>
+        <button class="p-2 bg-gray-400 hover:bg-white hover:-translate-x-2 transition-all shadow rounded-full" :class="order == 1 ? 'invisible' : ''"
+            @click="changeOrder('previous')">
+            <icon name="material-symbols:keyboard-arrow-left" size="30"/>
         </button>
 
-        <div class="h-5/6 flex justify-center relative">
+        <div class="h-5/6 aspect-[0.55] flex justify-center relative mx-4">
             <div v-html="story?.body[order - 1]?.content" class="flex justify-center"></div>
             <div class="flex flex-col items-center justify-between text-white absolute h-full aspect-[0.55]">
                 <div class="w-full p-2">
                     <!-- scroll bar -->
                     <div class="flex space-x-2 w-full">
                         <div v-for="s in story?.body.length" class="relative overflow-hidden w-full">
-                            <div class="w-full h-2 bg-gray-400 rounded-lg opacity-50"></div>
-                            <div class="absolute h-full bg-gray-default left-0 top-0 rounded-lg"
+                            <div class="w-full h-[5px] bg-gray-400 rounded-lg opacity-50"></div>
+                            <div class="absolute h-full bg-gray-default opacity-70 left-0 top-0 rounded-lg"
                                 :style="{ width: `${width <= s * 100 ? ((width - (s - 1) * 100) % 100) : 100}%` }">
                             </div>
                         </div>
@@ -23,7 +24,7 @@
                         <div class="flex items-center space-x-2">
                             <avatar :image="story?.user.avatar" />
                             <span>{{ story?.user.firstName }} {{ story?.user.lastName }}</span>
-                            <span>{{ formatTime(story?.createdAt) }}</span>
+                            <span>{{ formatTime(story?.body[order - 1]?.createdAt) }}</span>
                         </div>
                         <div class="flex items-center space-x-2">
                             <button>
@@ -34,14 +35,26 @@
                                 <icon :name="sound ? 'charm:sound-up' : 'charm:sound-mute'" size="28"
                                     @click="sound = !sound" />
                             </button>
+                            <div class="relative">
+                                <button @click="optionHandler">
+                                    <icon name="mdi:dots-horizontal" size="28"/>
+                                </button>
+                                <div v-if="option" class="deleteContainer">
+                                    <button class="text-black flex items-center space-x-2 hover:bg-gray-200 p-1 rounded-lg" @click="deleteAction">
+                                        <icon name="ion:trash-outline" size="20"/>
+                                        <span>Delete photo</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <button class="p-3 bg-white shadow rounded-full">
-            <icon name="material-symbols:arrow-forward-ios-rounded"/>
+        <button class="p-2 bg-gray-400 hover:bg-white hover:translate-x-2 transition-all shadow rounded-full" :class="order == story?.body?.length ? 'invisible' : ''"
+            @click="changeOrder('next')">
+            <icon name="material-symbols:keyboard-arrow-right" size="30"/>
         </button>
     </div>
 </template>
@@ -51,15 +64,17 @@ import { formatTime } from '~/libraries/utilities'
 
 definePageMeta({ layout: 'story-detail' })
 
+const { $bus } = useNuxtApp()
 const route = useRoute()
 const _getStory = useGet('story')
 const { currentUser } = usePrincipal()
+const _patchStory = usePatch('story')
 
 const id_story = route.params.id
 const story = ref()
-// await _getStory(id_story).then(res => story.value = res.find(r => r.id == id_story))
 const order = ref<number>(1)
 const playButton = ref<boolean>(true)
+const option = ref<boolean>(false)
 const sound = ref<boolean>(true)
 const width = ref(0)
 
@@ -77,12 +92,57 @@ const playHandler = () => {
     }
 }
 
+const optionHandler = () => {
+    option.value = !option.value
+    playHandler()
+}
+
+const deleteAction = () => {
+    if (order.value == story.value.body.length) navigateTo('/')
+
+    story.value.body.splice(order.value - 1, 1)
+    clearInterval(interval)
+    width.value = (order.value - 1) * 100
+    interval = setInterval(() => {
+        width.value += 1
+    }, 50)
+    playButton.value = !playButton.value
+    option.value = !option.value
+}
+
+const changeOrder = (type: string) => {
+    clearInterval(interval)
+    playButton.value = true
+    if (type == 'next'){
+        width.value = order.value * 100
+        order.value += 1
+        interval = setInterval(() => {
+            width.value += 1
+        }, 50)
+    } else {
+        console.log('before',width.value, order.value)
+        order.value -= 1
+        width.value = (order.value - 1) * 100
+        console.log('after',width.value, order.value)
+        interval = setInterval(() => {
+            width.value += 1
+        }, 50)
+    }
+}
+
 watch(width, () => {
     if (width.value == order.value * 100) order.value += 1
 })
 
 watch(order, () => {
     if (order.value == story.value.body.length + 1) navigateTo('/')
+    if (!story.value.body[order.value - 1]?.viewers.includes(currentUser.value.userId)) {
+        $bus.$emit('update.story', {
+            index: order.value - 1,
+            id: id_story
+        })
+        _patchStory(story.value.body[order.value-1].id, {id: story.value.body[order.value-1].id})
+    }
 })
 
 onMounted(() => {
@@ -100,10 +160,30 @@ onBeforeMount(async ()=>{
         .then(res => {
             story.value = res.find(r => r.id == id_story)
             const index = story.value.body.findIndex(_ => !_.viewers.includes(currentUser.value.userId))
-            if (index > 0){
+            if (index >= 0){
                 order.value = index + 1
                 width.value = index * 100
+                $bus.$emit('update.story', {
+                    index: order.value - 1,
+                    id: id_story
+                })
+                _patchStory(story.value.body[order.value-1].id, {id: story.value.body[order.value-1].id}) 
             }
+
         })
 })
 </script>
+
+
+<style scoped>
+.deleteContainer {
+    @apply absolute right-0 bg-white shadow p-2 rounded-lg;
+    @apply text-sm font-semibold whitespace-nowrap;
+}
+
+/* .deleteContainer::before {
+    content: '';
+    @apply absolute right-0 top-0;
+    @apply w-5 h-5 bg-red-600
+} */
+</style>

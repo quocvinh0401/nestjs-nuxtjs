@@ -1,4 +1,3 @@
-import dist from '@vitejs/plugin-vue';
 import { User } from '~/shared/user.interface';
 
 export const serialize = (obj: any, prefix?: string): string => {
@@ -74,25 +73,41 @@ export const isValidDate = (day: number, month: number, year: number) => {
   }
 };
 
-export const formatTime = (time: Date) => {
-  const now = new Date().getTime();
-  const created = new Date(time).getTime();
-
+export const formatTime = (time: Date, option: number = 0) => {
   let str = '';
+  if (option == 0) {
+    const now = new Date().getTime();
+    const created = new Date(time).getTime();
 
-  const distance = (now - created) / 1000;
 
-  if (distance < 60) str = Math.round(distance) + 's';
-  else if (distance < 60 * 60) str = Math.round(distance / 60) + 'm';
-  else if (distance < 60 * 60 * 24)
-    str = Math.round(distance / (60 * 60)) + 'h';
-  else if (distance < 60 * 60 * 24 * 7)
-    str = Math.round(distance / (60 * 60 * 24)) + 'd';
-  else if (distance < 60 * 60 * 24 * 7 * 4)
-    str = Math.round(distance / (60 * 60 * 24 * 7)) + 'w';
-  else if (distance < 60 * 60 * 24 * 7 * 4 * 12)
-    str = Math.round(distance / (60 * 60 * 24 * 7 * 4)) + 'm';
-  else str = Math.round(distance / (60 * 60 * 24 * 7 * 4 * 12)) + 'y';
+    const distance = (now - created) / 1000;
+
+    if (distance < 60) str = Math.round(distance) + 's';
+    else if (distance < 60 * 60) str = Math.round(distance / 60) + 'm';
+    else if (distance < 60 * 60 * 24)
+      str = Math.round(distance / (60 * 60)) + 'h';
+    else if (distance < 60 * 60 * 24 * 7)
+      str = Math.round(distance / (60 * 60 * 24)) + 'd';
+    else if (distance < 60 * 60 * 24 * 7 * 4)
+      str = Math.round(distance / (60 * 60 * 24 * 7)) + 'w';
+    else if (distance < 60 * 60 * 24 * 7 * 4 * 12)
+      str = Math.round(distance / (60 * 60 * 24 * 7 * 4)) + 'm';
+    else str = Math.round(distance / (60 * 60 * 24 * 7 * 4 * 12)) + 'y';
+  } else if (option == 1) {
+    const formatDatemMonthYear = new Intl.DateTimeFormat('en-us', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })
+
+    const formatHourMinute = new Intl.DateTimeFormat('en-us', {
+      hourCycle: 'h23',
+      hour: 'numeric',
+      minute: 'numeric'
+    })
+
+    str = formatDatemMonthYear.format(new Date(time)) + ' at ' + formatHourMinute.format(new Date(time))
+  }
   return str;
 };
 
@@ -154,3 +169,7 @@ export const getAverageColor = async (image) => {
 
   return rgb;
 };
+
+export const newStoriesList = (story: any, userId: string) => {
+  return story.body.filter(b => !b.viewers.includes(userId))
+}

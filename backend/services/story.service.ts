@@ -109,4 +109,10 @@ export class StoryService extends Service<Story, StoryDTO> {
             )
         await this.em.persistAndFlush(story)
     }
+
+    async updateView(id: string, user: any){
+        const story = await this.repository.findOne(id)
+        story?.viewers.push(user.userId)
+        this.em.flush()
+    }
 }

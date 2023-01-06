@@ -113,8 +113,7 @@
                         <div class="flex space-x-3">
                             <avatar :image="currentUser.avatar" />
                             <div>
-                                <p class="font-semibold text-sm">{{ `${currentUser.firstName} ${currentUser.lastName}`
-}}</p>
+                                <p class="font-semibold text-sm">{{ `${currentUser.firstName} ${currentUser.lastName}`}}</p>
                                 <select name="" id=""
                                     class="p-1 outline-none bg-gray-300 text-sm font-semibold rounded-lg"
                                     v-model="payload.manageAccess">
@@ -124,7 +123,7 @@
                                 </select>
                             </div>
                         </div>
-                        <textarea name="" id="" cols="30" rows="3" autofocus
+                        <textarea name="" id="" cols="30" rows="3"
                             :placeholder="`What's on your mind, ${currentUser.lastName}?`"
                             class="w-full outline-none resize-none my-4" v-model="payload.content.text"></textarea>
                         <button class="blue w-full text-white p-2 font-semibold rounded-lg" @click="createPost">
