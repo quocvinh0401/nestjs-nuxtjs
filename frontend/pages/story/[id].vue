@@ -111,23 +111,25 @@ const deleteAction = () => {
 }
 
 const changeOrder = (type: string) => {
-    clearInterval(interval)
-    playButton.value = true
+    
     if (type == 'next'){
+        if (order.value == story.value.body.length) return
+        clearInterval(interval)
         width.value = order.value * 100
         order.value += 1
         interval = setInterval(() => {
             width.value += 1
         }, 50)
     } else {
-        console.log('before',width.value, order.value)
+        if (order.value == 1) return
+        clearInterval(interval)
         order.value -= 1
         width.value = (order.value - 1) * 100
-        console.log('after',width.value, order.value)
         interval = setInterval(() => {
             width.value += 1
         }, 50)
     }
+    playButton.value = true
 }
 
 watch(width, () => {
