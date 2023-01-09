@@ -115,4 +115,16 @@ export class StoryService extends Service<Story, StoryDTO> {
         story?.viewers.push(user.userId)
         this.em.flush()
     }
+
+    async deleteStory(id: string){
+        // const stories = await this.repository.find({})
+        // const index = stories.findIndex(s => s.id == id)
+        // console.log(stories.length)
+
+        // stories.splice(index, 1)
+        // console.log(stories.length)
+        // await this.em.persistAndFlush(stories)
+        const story = await this.repository.findOne(id)
+        await this.repository.removeAndFlush(story)
+    }
 }

@@ -43,6 +43,7 @@
     "dom-to-image": "^2.6.0",
     "express-fileupload": "^1.4.0",
     "html2canvas": "1.4.1",
+    "interactjs": "^1.10.17",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "multer-storage-cloudinary": "^4.0.0",

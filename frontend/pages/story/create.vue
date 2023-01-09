@@ -96,10 +96,10 @@
                 <div class="bg-black rounded-lg flex items-center justify-center absolute left-4 bottom-4 right-4 top-12 py-4">
                     <div v-if="chooseCreate == 'photo_story'" class="h-full flex flex-col space-y-2 items-center">
                         <div class="h-full aspect-[0.55] bg-red-300 rounded-lg border border-white flex justify-center items-center overflow-hidden" id="story">
-                            <img :src="tempImage" alt="" class="w-full cursor-pointer" @click="isAdjustImage = true"
-                            :style="{transform: `rotate(${adjustImage.rotate}deg)`, scale: `${adjustImage.scale}`}">
+                            <img :src="tempImage" alt="" class="w-full cursor-pointer img" @click="interactImage"
+                            :style="{transform: `rotate(${adjustImage.rotate}deg) translate(${adjustImage.translateX}px, ${adjustImage.translateY}px)`, scale: `${adjustImage.scale}`}">
                         </div>
-                        <div v-if="!isAdjustImage" class="text-white">Select photo to drop or rotate</div>
+                        <div v-if="!isAdjustImage" class="text-white py-1">Select photo to drop or rotate</div>
                         <div v-else class="flex items-center space-x-2 w-full">
                             <input type="range" class="w-full" v-model="adjustImage.scale" min="0.5" max="2" step="0.1">
                             <button class="flex items-center space-x-1 bg-gray-200 p-1 rounded-lg" @click="rotateImage">
@@ -128,6 +128,7 @@ import { getAverageColor } from '~/libraries/utilities';
 import { Story as iStory } from '~/shared/story.interface';
 import domtoimage from 'dom-to-image';
 import html2canvas from 'html2canvas'
+import interact from 'interactjs'
 
 definePageMeta({layout: 'story'})
 
@@ -142,7 +143,9 @@ const tempFile = ref()
 const isAdjustImage = ref<boolean>(false)
 const adjustImage = ref({
     scale: 1,
-    rotate: 0
+    rotate: 0,
+    translateX: 0,
+    translateY: 0
 })
 const content_text_story = ref<string>('')
 
@@ -171,22 +174,68 @@ const rotateImage = () => {
 
 const submitStory = async () => {
     const body = document.getElementById('story') as HTMLElement
-    html2canvas(body).then(res => document.body.appendChild(res))
-    // const formData = new FormData()
-    // formData.append('file', tempFile.value)
-    // await $fetch('http://localhost:4000/api/file/story', {
-    //     method: 'POST',
-    //     body: formData,
-    //     headers: {
-    //         Authorization: `Bearer ${authentication.value.jwt}`
-    //     }
-    // })
-    //     .then(res => tempImage.value = res.url)
-    //     .then(res => {
-    //         const body = document.getElementById('story')?.outerHTML.replace('cursor-pointer', '')
-    //         const story = Builder<iStory>().body(body!).build()
-    //         _postStory(story)
-    //     })
-    // navigateTo('/')
+    // html2canvas(body).then(res => document.body.appendChild(res))
+    const formData = new FormData()
+    formData.append('file', tempFile.value)
+    await $fetch('http://localhost:4000/api/file/story', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            Authorization: `Bearer ${authentication.value.jwt}`
+        }
+    })
+        .then(res => tempImage.value = res.url)
+        .then(res => {
+            const body = document.getElementById('story')?.outerHTML.replace('cursor-pointer', '')
+            const story = Builder<iStory>().body(body!).build()
+            _postStory(story)
+        })
+    navigateTo('/')
 }
+
+const interactImage = () => {
+    isAdjustImage.value = true
+
+    let rotate = ''
+    let scale : number
+    const story = document.querySelector('#story')
+    const widthContainer = story!.clientWidth
+    const heightContainer = story!.clientHeight
+
+    let widthImg
+    let heightImg
+
+    interact('.img').draggable({
+        listeners: {
+            start (event) {
+                const transform = event.target.style.transform.split(' ')
+                rotate = transform.find(v => v.includes('rotate'))
+                scale = event.target.style.scale
+
+                widthImg = event.target.clientWidth
+                heightImg = event.target.clientHeight
+
+                console.log(widthContainer)
+            },
+
+            move (event) {
+                if (widthImg * scale >= widthContainer) {
+                    if (adjustImage.value.translateX + event.dx > - widthImg*(1 - (scale -1)/2) + 20 && adjustImage.value.translateX + event.dx < widthImg*(1 - (scale -1)/2) - 20) adjustImage.value.translateX += event.dx
+
+                } else {
+                    if (adjustImage.value.translateX + event.dx > - (widthContainer + widthImg * scale) + 20  && adjustImage.value.translateX + event.dx < (widthContainer + widthImg * scale) - 20) adjustImage.value.translateX += event.dx
+
+                }
+
+                if (heightImg * scale >= heightContainer) {
+                    if (adjustImage.value.translateY + event.dy > - heightImg*(1 - (scale -1)/2) + 20  && adjustImage.value.translateY + event.dy < heightImg*(1 - (scale -1)/2) - 20) adjustImage.value.translateY += event.dy
+                } else {
+                    if (adjustImage.value.translateY + event.dy > - heightImg*(1 - (scale -1)/2) + 20  && adjustImage.value.translateY + event.dy < (heightContainer + heightImg * scale) - 20) adjustImage.value.translateY += event.dy
+                }
+
+            },
+        }
+    })
+}
+
 </script>

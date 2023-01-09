@@ -28,6 +28,7 @@ export class FileService extends Service<User, UserDTO>{
     }
 
     async setPhotoStory(file: any){
+        console.log('setttttt')
         const res = await cloudinary.uploader.upload(file.path, {
             public_id: `${Date.now()}_story`,
             resource_type: 'auto',
